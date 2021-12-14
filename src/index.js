@@ -1,6 +1,18 @@
 //import shuffleDeck from "./librairies/shuffle.js";
+import {Game} from "./class/Game.js"
+const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
+let url_shuffle;
+let url_draw;
+let count_card = 52; //le nombre de cartes à draw
+let game = new Game("started",0,[],[]);
 
-const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6"
+//On récupère l'id du deck et on initialise les  url "shuffle" et "draw"
+await fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+        url_shuffle = `https://deckofcardsapi.com/api/deck/${data.deck_id}/return/`;
+        url_draw = `https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${count_card}`;
+    });
 
 
 /*async function fetchDeckJSON() {
@@ -12,8 +24,6 @@ fetchDeckJSON().then(deck => {
     const idDeck = deck; // fetched movies
     console.log(idDeck);
 });*/
-
-const url_shuffle = "https://deckofcardsapi.com/api/deck/e3148dhynphx/return/"
 
 async function shuffleDeck() {
     const response = await fetch(url_shuffle);
@@ -40,11 +50,9 @@ let value = {
     "K": 10
 }
 
-const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?count=2")
+const drawCrad = fetch(url_draw)
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
-
         let score_finale = 0;
 
         let div = document.createElement("div");
@@ -92,19 +100,21 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
         }
         document.body.appendChild(btn);
 
+        game.cardsRemaining = data.cards;
+        game.addCardOnBoard(data.cards[0]);
+        game.addCardOnBoard(data.cards[1]);
+        console.log(game);
+
         let btn2 = document.createElement("button");
         btn2.innerHTML = "Piocher une nouvelle carte";
         btn2.onclick = function() {
             fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?count=1")
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
-
                     let div_scoreX = document.createElement("div");
                     div.append(div_scoreX);
 
                     var newImg = new Image(150, 200);
-                    console.log(data.cards[0].image);
                     newImg.src = data.cards[0].image;
                     div_scoreX.append(newImg);
                     let scoreX = data.cards[0].code.charAt(0);
@@ -112,9 +122,10 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
                     textScoreX.textContent += "Valeur de la carte : " + value[scoreX];
                     div_scoreX.append(textScoreX);
                     score_finale += value[scoreX];
+                    game.addCardOnBoard(data.cards[0]);
                     document.getElementById('score_finale').innerText = "Score : " + score_finale;
-
                     document.getElementById('nb_carte').innerText = "Nombre de cartes restantes : " + data.remaining
+                    console.log(game);
                 })
         }
         document.body.appendChild(btn2);
