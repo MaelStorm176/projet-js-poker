@@ -4,7 +4,23 @@ const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
 let url_shuffle;
 let url_draw;
 let count_card = 52; //le nombre de cartes à draw
-let game = new Game("started",0,[],[]);
+let game = new Game("started",0,[],[]); //Le jeu
+const value = { //les valeurs des cartes
+    "A": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "0": 10,
+    "J": 10,
+    "Q": 10,
+    "K": 10
+}
 
 //On récupère l'id du deck et on initialise les  url "shuffle" et "draw"
 await fetch(url)
@@ -33,22 +49,6 @@ async function shuffleDeck() {
     return shuffle;
 }
 
-let value = {
-    "A": 0,
-    "1": 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "0": 10,
-    "J": 10,
-    "Q": 10,
-    "K": 10
-}
 
 const drawCrad = fetch(url_draw)
     .then((response) => response.json())
