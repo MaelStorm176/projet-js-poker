@@ -79,6 +79,11 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
         textScoreFinale.textContent += "Score : " + score_finale;
         document.body.append(textScoreFinale);
 
+        let textNbCarte = document.createElement("p")
+        textNbCarte.id = "nb_carte";
+        textNbCarte.textContent += "Nombre de cartes restantes : " + data.remaining;
+        document.body.append(textNbCarte);
+
         let btn = document.createElement("button");
         btn.innerHTML = "Relancer";
         btn.type = "submit";
@@ -108,6 +113,8 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
                     div_scoreX.append(textScoreX);
                     score_finale += value[scoreX];
                     document.getElementById('score_finale').innerText = "Score : " + score_finale;
+
+                    document.getElementById('nb_carte').innerText = "Nombre de cartes restantes : " + data.remaining
                 })
         }
         document.body.appendChild(btn2);
