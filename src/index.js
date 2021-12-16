@@ -67,7 +67,7 @@ function drawNewCard() {
             let textScoreX = document.createElement("p")
             textScoreX.textContent += "Valeur de la carte : " + value[scoreX];
             div_scoreX.append(textScoreX);
-            score_finale += value[scoreX];
+            game.score += value[scoreX];
             document.getElementById('score_finale').innerText = "Score : " + score_finale;
 
             document.getElementById('nb_carte').innerText = "Nombre de cartes restantes : " + data.remaining
@@ -84,8 +84,6 @@ function drawNewCard() {
 const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?count=2")
     .then((response) => response.json())
     .then((data) => {
-        let score_finale = 0;
-
         let div = document.createElement("div");
         div.style.display = "flex";
         div.id = "principale";
@@ -103,7 +101,7 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
         let textScore1 = document.createElement("p")
         textScore1.textContent += "Valeur 1 : " + value[score1];
         div_score1.append(textScore1);
-        score_finale += value[score1];
+        game.score += value[score1];
 
         var myImage2 = new Image(150, 200);
         myImage2.src = data.cards[1].image;
@@ -112,11 +110,11 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
         let textScore2 = document.createElement("p")
         textScore2.textContent += "Valeur 2 : " + value[score2];
         div_score2.append(textScore2);
-        score_finale += value[score2];
+        game.score += value[score2];
 
         let textScoreFinale = document.createElement("p")
         textScoreFinale.id = "score_finale";
-        textScoreFinale.textContent += "Score : " + score_finale;
+        textScoreFinale.textContent += "Score : " + game.score;
         document.body.append(textScoreFinale);
 
         let textNbCarte = document.createElement("p")
@@ -153,17 +151,17 @@ const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?c
                     let textScoreX = document.createElement("p")
                     textScoreX.textContent += "Valeur de la carte : " + value[scoreX];
                     div_scoreX.append(textScoreX);
-                    score_finale += value[scoreX];
+                    game.score += value[scoreX];
                     game.addCardOnBoard(data.cards[0]);
-                    document.getElementById('score_finale').innerText = "Score : " + score_finale;
+                    document.getElementById('score_finale').innerText = "Score : " + game.score;
                     document.getElementById('nb_carte').innerText = "Nombre de cartes restantes : " + data.remaining
                     console.log(game);
                 })
         }
         document.body.appendChild(btn2);
 
-        if (score_finale > 21) {
-            console.log(score_finale);
+        if (game.score > 21) {
+            console.log(game.score);
             let loose = document.createElement("h1");
             loose.innerText = "You loose";
             div.append(loose);

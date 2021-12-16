@@ -5,12 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker-21</title>
-    <link rel="stylesheet" src="./style/style.css">
+    <link rel="stylesheet" href="./style/style.css">
 </head>
 
 <body>
-    <script src="src/index.js" type="module"></script>
-    <img src="img/deck.png" width="150" height="200" onclick="drawNewCard()">
+    <div>
+        <div>
+            <p>Nombre de carte restante : <span id="carte_rest"></span></p>
+        </div>
+    </div>
+    <div>
+        <h1>Votre score est de : <span id="score"></span></h1>
+    </div>
+    <div>
+        <div>
+            <img src="img/deck.png" width="150" height="200" onclick="drawNewCard()" id="deck">
+        </div>
+        <div>
+            <div id="carte1"></div>
+            <div id="carte2"></div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    <script src="src/index.js"></script>
 </body>
 
 </html>
