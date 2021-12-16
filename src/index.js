@@ -9,23 +9,6 @@ const span_score = document.getElementById("score");
 const div_cartes = document.getElementById("add_card");
 const carte_rest = document.getElementById("carte_rest");
 
-const value = { //les valeurs des cartes
-    "A": 0,
-    "1": 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "0": 10,
-    "J": 10,
-    "Q": 10,
-    "K": 10
-}
-
 //On récupère l'id du deck et on initialise les url "shuffle" et "draw"
 await fetch(url)
     .then((response) => response.json())
@@ -41,7 +24,7 @@ export async function shuffleDeck() {
     return shuffle;
 }
 
-function createDivCard(card){
+function createDivCard(card) {
     const new_div_image = document.createElement("div");
     const newImg = new Image(150, 200);
     newImg.style.transform = "rotate(-10deg)";
@@ -53,12 +36,7 @@ function createDivCard(card){
     /**** AJOUT IMAGE ****/
     newImg.src = card.image;
     new_div_image.appendChild(newImg);
-
-    /**** AJOUT SCORE ****/
-    textScoreX.textContent += "Valeur de la carte : " + value[scoreX];
-
-    new_div_image.appendChild(textScoreX);
-    div_cartes.appendChild(new_div_image);
+    div_cartes.appendChild(newImg);
 }
 
 export function drawNewCard() {
@@ -80,14 +58,5 @@ export function drawNewCard() {
     });
 }
 
-
 drawNewCard();
 drawNewCard();
-/*
-const drawCards = fetch(url_draw_2)
-    .then((response) => response.json())
-    .then((data) => {
-        createDivCard(data.cards[0]);
-        createDivCard(data.cards[1]);
-});
-*/
