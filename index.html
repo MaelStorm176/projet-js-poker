@@ -5,13 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker-21</title>
-    <link rel="stylesheet" src="./style/style.css">
+    <link rel="stylesheet" href="./style/style.css">
 </head>
 
 <body>
+    <div>
+        <div>
+            <p>Nombre de carte restante : <span id="carte_rest"></span></p>
+        </div>
+    </div>
+    <div class="score">
+        <div>
+            <h1 class="title"><span id="score"></span></h1>
+        </div>
+        <div id="newValue" class="column-flex">
+            <p id="value1"></p>
+            <p id="value2"></p>
+        </div>
+    </div>
+    <div class="flex">
+        <div>
+            <img src="img/deck.png" width="150" height="200" onclick="drawNewCard()" id="deck">
+        </div>
+        <div class="flex-card" id="add_card">
+            <div id="carte1"></div>
+            <div id="carte2"></div>
+        </div>
+        <div>
+            <div><button onclick="shuffleDeck()">Relancer</button></div>
+        </div>
+    </div>
     <script src="src/index.js"></script>
-    <img src="img/deck.png" width="150" height="200" onclick="drawNewCard()">
-
 </body>
 
 </html>
