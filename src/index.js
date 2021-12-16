@@ -43,6 +43,7 @@ export async function shuffleDeck() {
 
 function createDivCard(card) {
     const new_div_image = document.createElement("div");
+    //new_div_image.style.position = "absolute";
     const newImg = new Image(150, 200);
     newImg.style.transform = "rotate(-10deg)";
 
@@ -56,6 +57,15 @@ function createDivCard(card) {
     new_div_image.appendChild(newImg);
     new_div_image.appendChild(textScoreX);
     div_cartes.appendChild(new_div_image);
+    new_div_image.animate([
+            // keyframes
+            { transform: 'translateY(-300px)' },
+            { transform: 'translateY(0px)' }
+        ], {
+            // timing options
+            duration: 1000,
+            iterations: 1
+        });
 }
 
 export function drawNewCard() {
