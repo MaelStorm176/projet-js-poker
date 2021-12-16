@@ -49,14 +49,46 @@ async function shuffleDeck() {
     return shuffle;
 }
 
+function drawNewCard() {
+    fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?count=1")
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
 
-const drawCrad = fetch(url_draw)
+            let div = document.getElementById('principale');
+            let div_scoreX = document.createElement("div");
+            div.append(div_scoreX);
+
+            var newImg = new Image(150, 200);
+            console.log(data.cards[0].image);
+            newImg.src = data.cards[0].image;
+            div_scoreX.append(newImg);
+            let scoreX = data.cards[0].code.charAt(0);
+            let textScoreX = document.createElement("p")
+            textScoreX.textContent += "Valeur de la carte : " + value[scoreX];
+            div_scoreX.append(textScoreX);
+            score_finale += value[scoreX];
+            document.getElementById('score_finale').innerText = "Score : " + score_finale;
+
+            document.getElementById('nb_carte').innerText = "Nombre de cartes restantes : " + data.remaining
+            if (score_finale > 21) {
+                let loose = document.createElement("h1");
+                loose.innerText = "You loose, sale merde";
+                div.append(loose);
+
+                btn2.style.display = "none";
+            }
+        })
+}
+
+const drawCrad = fetch("https://deckofcardsapi.com/api/deck/e3148dhynphx/draw/?count=2")
     .then((response) => response.json())
     .then((data) => {
         let score_finale = 0;
 
         let div = document.createElement("div");
         div.style.display = "flex";
+        div.id = "principale";
         document.body.appendChild(div);
 
         let div_score1 = document.createElement("div");
