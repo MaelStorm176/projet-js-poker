@@ -9,6 +9,23 @@ const span_score = document.getElementById("score");
 const div_cartes = document.getElementById("add_card");
 const carte_rest = document.getElementById("carte_rest");
 
+const value = {
+    "A": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "0": 10,
+    "J": 10,
+    "Q": 10,
+    "K": 10
+}
+
 //On récupère l'id du deck et on initialise les url "shuffle" et "draw"
 await fetch(url)
     .then((response) => response.json())
@@ -32,11 +49,13 @@ function createDivCard(card) {
     /**** SCORE DE LA CARTE ****/
     let scoreX = card.code.charAt(0);
     let textScoreX = document.createElement("p");
+    textScoreX.innerText = "Valeur = "+value[scoreX];
 
     /**** AJOUT IMAGE ****/
     newImg.src = card.image;
     new_div_image.appendChild(newImg);
-    div_cartes.appendChild(newImg);
+    new_div_image.appendChild(textScoreX);
+    div_cartes.appendChild(new_div_image);
 }
 
 export function drawNewCard() {
@@ -55,6 +74,17 @@ export function drawNewCard() {
             if (game.isFinish()){
                 alert(`Le jeu est fini : ${game.state}`);
             }
+    });
+}
+
+function keyboardPress() {
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'd') {
+            drawNewCard(); // On tire une carte
+        }
+        if (event.key === 'c') {
+            // annuler le tirage
+        }
     });
 }
 
