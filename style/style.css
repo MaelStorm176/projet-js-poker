@@ -1,0 +1,42 @@
+body {
+    background-image: url(../img/plateau.png);
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+* {
+    color: white;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+}
+
+.flex-card {
+    display: flex;
+}
+
+.score {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.title {
+    background-color: black;
+    border: solid 1px green;
+    width: 30%;
+    border-radius: 20%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.column-flex {
+    display: flex;
+    flex-direction: column;
+}
