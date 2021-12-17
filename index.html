@@ -29,18 +29,12 @@
     </div>
     <div>
         <div><button id="shuffle">Relancer</button></div>
+        <div><button id="victory">Arreter</button></div>
     </div>
 </div>
 
 <script src="src/index.js" type="module"></script>
-<script type="module">
-    import {shuffleDeck,drawNewCard} from './src/index.js';
 
-    let new_card = document.getElementById("deck");
-    let shuffle = document.getElementById("shuffle");
-    new_card.addEventListener("click",drawNewCard);
-    shuffle.addEventListener("click",shuffleDeck);
-</script>
 </body>
 
 </html>
