@@ -1,6 +1,5 @@
 body {
-    background-image: url(../img/plateau.png);
-    background-size: cover;
+    background-color: #0E4E1D;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -39,4 +38,8 @@ body {
 .column-flex {
     display: flex;
     flex-direction: column;
+}
+
+.plateau {
+    margin-top: -8%;
 }
