@@ -12,13 +12,16 @@ const game = new Game(
     0,
     false,
     "score", //Le span de score
-    "add_card", //La div où les cartes s'ajoutent
-    "carte_rest" //La div où on affiche le nb de cartes restantes
+    "carte_rest", //La div où on affiche le nb de cartes restantes
+    "score_croupier", //La div où on affiche le score du croupier
+    0
 );
 game.pPromise.then(() => {
     //On initialise les deux cartes de départ
     game.drawNewCard('carte1', "314.5", "381.37");
     game.drawNewCard('carte2', "395.5", "381.37");
+
+    game.drawNewCardCroup('carte2_croup', "394", "122.37");
 
     // EVENTS LISTENER
     new_card.addEventListener("click", function() {
@@ -28,8 +31,8 @@ game.pPromise.then(() => {
         game.shuffleDeck();
     }, false);
     victory.addEventListener("click", function() {
-        game.stopGame();
-        console.log(game.state);
+        game.drawNewCardCroup('carteCache', "312.5", "122.37");
+        //game.isFinish2();
     });
     document.addEventListener('keydown', function(event) {
         if (event.key === 'd') {

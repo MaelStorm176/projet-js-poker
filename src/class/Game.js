@@ -1,10 +1,12 @@
 import { CardApi } from './CardApi.js'
+import { sleep } from '../../librairies/setup.js'
 export class Game extends CardApi {
-    constructor(state, score, dev, span_score, add_card, carte_rest) {
-        super(span_score, add_card, carte_rest);
+    constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
+        super(span_score, carte_rest, score_croupier);
         this.state = state;
         this.score = score;
         this.dev = dev; //Debugging en mode dev
+        this.scoreC = scoreC;
     }
 
     isFinish() {
@@ -27,15 +29,36 @@ export class Game extends CardApi {
         }
     }
 
+    isFinish2() {
+
+        if (this.state == "started") {
+            this.drawNewCardCroup('carte1_croup', '322', '122')
+            if (this.score < this.scoreC && this.scoreC < 21) {
+                this.state = "loose";
+                return true;
+            } else if (this.score === 21) {
+                this.state = "win";
+                return true;
+            } else if (this.score < this.scoreC && this.score < 21) {
+                this.state = "win";
+                return true;
+            } else {
+                this.state = "started";
+                return false;
+            }
+        }
+    }
+
     drawNewCard(id, x, y) {
         this.getNewCard().then((card) => {
             this.createDivCard(card, id, x, y);
-
+            this.state = 'joueur';
             /**** CARTES RESTANTES ****/
             this.score += this.value[card.code.charAt(0)];
             this.span_score.textContent = "Score : " + this.score;
 
             /**** RETEST SI ON A GAGNE/PERDU ****/
+
             if (this.isFinish()) {
                 alert(`Le jeu est fini : ${this.state}`);
                 window.navigator.vibrate([1000, 1000, 2000]);
@@ -43,9 +66,24 @@ export class Game extends CardApi {
         });
     }
 
-    stopGame() {
-        this.state = "stopped";
-        this.drawNewCard();
-    }
+    drawNewCardCroup(id, x, y) {
+        this.getNewCard().then((card) => {
+            this.createDivCardCroup(card, id, x, y);
 
+            /**** CARTES RESTANTES ****/
+            this.scoreC += this.value[card.code.charAt(0)];
+            this.score_croupier.textContent = "Score : " + this.scoreC;
+
+            /**** RETEST SI ON A GAGNE/PERDU ****/
+            if (this.scoreC > 10) {
+                if (this.isFinish2() && this.state != "end") {
+                    alert(`Le jeu est fini : ${this.state}`);
+                    window.navigator.vibrate([1000, 1000, 2000]);
+                    this.state = "end";
+                }
+                console.log(sleep(10));
+                return true;
+            }
+        });
+    }
 }

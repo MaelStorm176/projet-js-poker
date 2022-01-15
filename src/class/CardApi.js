@@ -1,4 +1,6 @@
 import { setupDrawCardJoueur } from "../../librairies/setup.js"
+import { DrawCardJoueur } from "../../librairies/setup.js"
+import { insertAfter } from "../../librairies/setup.js"
 export class CardApi {
     url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
     url_shuffle;
@@ -21,10 +23,10 @@ export class CardApi {
         "K": 10
     }
 
-    constructor(span_score, add_card, carte_rest) {
+    constructor(span_score, carte_rest, score_croupier) {
         this.span_score = document.getElementById("score");
-        this.div_cartes = document.getElementById("add_card");
         this.carte_rest = document.getElementById("carte_rest");
+        this.score_croupier = document.getElementById("score_croupier");
         this.initUrls();
     }
 
@@ -51,17 +53,50 @@ export class CardApi {
         newImg.style.transform = "rotate(-10deg)";*/
 
         /**** SCORE DE LA CARTE ****/
-        let scoreX = card.code.charAt(0);
+        /*let scoreX = card.code.charAt(0);
         let textScoreX = document.createElement("p");
-        textScoreX.innerText = "Valeur = " + this.value[scoreX];
+        textScoreX.innerText = "Valeur = " + this.value[scoreX];*/
+
+        /**** AJOUT IMAGE ****/
+        //newImg.src = card.image;
+        console.log(id);
+        console.log(card);
+        let new_image = DrawCardJoueur(card.image, x, y)
+
+        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id));
+        //new_div_image.appendChild(textScoreX);
+        //this.div_cartes.appendChild(document.getElementById(id));
+        new_image.animate(
+            [
+                // keyframes
+                { transform: 'translateY(-300px)' },
+                { transform: 'translateY(0px)' }
+            ], {
+                // timing options
+                duration: 1000,
+                iterations: 1
+            }
+        );
+    }
+
+    createDivCardCroup(card, id, x, y) {
+        /*const new_div_image = document.createElement("div");
+        //new_div_image.style.position = "absolute";
+        const newImg = new Image(150, 200);
+        newImg.style.transform = "rotate(-10deg)";*/
+
+        /**** SCORE DE LA CARTE ****/
+        /*let scoreC = card.code.charAt(0);
+        let textScoreC = document.createElement("p");
+        textScoreC.innerText = "Valeur = " + this.value[scoreC];*/
 
         /**** AJOUT IMAGE ****/
         //newImg.src = card.image;
         console.log(id);
         console.log(card);
         let new_image = setupDrawCardJoueur(card.image, x, y)
-
-        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id));
+        new_image.style.zIndex = "1";
+        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
         //new_div_image.appendChild(textScoreX);
         //this.div_cartes.appendChild(document.getElementById(id));
         new_image.animate(
