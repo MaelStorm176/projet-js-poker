@@ -14,7 +14,7 @@ export function setup() {
     newImg.setAttributeNS(null, 'y', '122.74');
     newImg.setAttributeNS(null, 'width', '110');
     newImg.setAttributeNS(null, 'height', '75');
-    newImg.setAttributeNS(null, 'href', 'http://localhost:8080/img/deck.png');
+    newImg.setAttributeNS(null, 'href', './img/deck.png');
     newImg.id = "carteCache";
     newImg.style.zIndex = "0";
     newImg.animate(
