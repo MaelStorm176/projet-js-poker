@@ -25,18 +25,21 @@ game.pPromise.then(() => {
 
     // EVENTS LISTENER
     new_card.addEventListener("click", function() {
-        game.drawNewCard('carte1', 315.5, "381.37");
+        game.drawNewCard('carte1', "315.5", "381.37");
     });
+
     shuffle.addEventListener("click", function() {
         game.shuffleDeck();
     }, false);
+
     victory.addEventListener("click", function() {
         game.drawNewCardCroup('carteCache', "312.5", "122.37");
         //game.isFinish2();
     });
+
     document.addEventListener('keydown', function(event) {
         if (event.key === 'd') {
-            game.drawNewCard(); // On tire une carte
+            game.drawNewCard('carte1',"315.5", "381.37"); // On tire une carte
         }
         if (event.key === 'c') {
             // annuler le tirage

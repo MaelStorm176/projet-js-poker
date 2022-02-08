@@ -1,5 +1,6 @@
 import { CardApi } from './CardApi.js'
 import { sleep } from '../../librairies/setup.js'
+
 export class Game extends CardApi {
     constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
         super(span_score, carte_rest, score_croupier);
@@ -9,11 +10,11 @@ export class Game extends CardApi {
         this.scoreC = scoreC;
     }
 
+    //Si un joueur dépasse 21
     isFinish() {
         //Si on est en mode dev
         if (this.dev === true)
             return false;
-
         if (this.score > 21) {
             this.state = "loose";
             return true;
@@ -29,8 +30,8 @@ export class Game extends CardApi {
         }
     }
 
+    //Si le croupier dépasse 21
     isFinish2() {
-
         if (this.state == "started") {
             this.drawNewCardCroup('carte1_croup', '322', '122')
             if (this.score < this.scoreC && this.scoreC < 21) {
@@ -53,12 +54,12 @@ export class Game extends CardApi {
         this.getNewCard().then((card) => {
             this.createDivCard(card, id, x, y);
             this.state = 'joueur';
+
             /**** CARTES RESTANTES ****/
             this.score += this.value[card.code.charAt(0)];
             this.span_score.textContent = "Score : " + this.score;
 
             /**** RETEST SI ON A GAGNE/PERDU ****/
-
             if (this.isFinish()) {
                 alert(`Le jeu est fini : ${this.state}`);
                 window.navigator.vibrate([1000, 1000, 2000]);
