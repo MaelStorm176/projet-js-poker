@@ -5,6 +5,8 @@ const new_card = document.getElementById("deck");
 const shuffle = document.getElementById("shuffle");
 const victory = document.getElementById("victory");
 const reroll = document.getElementById("reroll");
+const img_connected = document.getElementById("img_connected");
+const img_disconnected = document.getElementById("img_disconnected");
 
 //Initialisation du jeu
 const game = new Game(
@@ -16,6 +18,15 @@ const game = new Game(
     "score_croupier", //La div où on affiche le score du croupier
     0
 );
+
+window.addEventListener('online', function(e) {
+    img_connected.style.display = "block";
+    img_disconnected.style.display = "none";
+});
+window.addEventListener('offline', function(e) {
+    img_connected.style.display = "none";
+    img_disconnected.style.display = "block";
+});
 
 game.pPromise.then(() => {
     //On initialise les deux cartes de départ
