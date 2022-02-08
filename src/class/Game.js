@@ -32,8 +32,7 @@ export class Game extends CardApi {
 
     //Si le croupier dépasse 21
     isFinish2() {
-        if (this.state == "started") {
-            this.drawNewCardCroup('carte1_croup', '322', '122')
+        if (this.state === "started") {
             if (this.score < this.scoreC && this.scoreC < 21) {
                 this.state = "loose";
                 return true;
@@ -54,7 +53,6 @@ export class Game extends CardApi {
         this.getNewCard().then((card) => {
             this.createDivCard(card, id, x, y);
             this.state = 'joueur';
-
             /**** CARTES RESTANTES ****/
             this.score += this.value[card.code.charAt(0)];
             this.span_score.textContent = "Score : " + this.score;
@@ -67,8 +65,8 @@ export class Game extends CardApi {
         });
     }
 
-    drawNewCardCroup(id, x, y) {
-        this.getNewCard().then((card) => {
+    async drawNewCardCroup(id, x, y) {
+        await this.getNewCard().then((card) => {
             this.createDivCardCroup(card, id, x, y);
 
             /**** CARTES RESTANTES ****/

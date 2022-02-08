@@ -32,8 +32,14 @@ game.pPromise.then(() => {
         game.shuffleDeck();
     }, false);
 
-    victory.addEventListener("click", function() {
-        game.drawNewCardCroup('carteCache', "312.5", "122.37");
+    victory.addEventListener("click", async function () {
+        while(game.state !== "end"){
+            try {
+                await game.drawNewCardCroup('carteCache', "312.5", "122.37");
+            } catch (e) {
+                console.log(e);
+            }
+        }
         //game.isFinish2();
     });
 
