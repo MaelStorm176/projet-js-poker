@@ -4,9 +4,9 @@ setup();
 const new_card = document.getElementById("deck");
 const shuffle = document.getElementById("shuffle");
 const victory = document.getElementById("victory");
+const reroll = document.getElementById("reroll");
 
 //Initialisation du jeu
-
 const game = new Game(
     "started",
     0,
@@ -16,6 +16,7 @@ const game = new Game(
     "score_croupier", //La div où on affiche le score du croupier
     0
 );
+
 game.pPromise.then(() => {
     //On initialise les deux cartes de départ
     game.drawNewCard('carte1', "314.5", "381.37");
@@ -29,8 +30,10 @@ game.pPromise.then(() => {
     });
 
     shuffle.addEventListener("click", function() {
-        game.shuffleDeck();
-    }, false);
+        game.shuffleDeck().then(r => {
+            //ANIMATION DU DECK A FAIRE ICI
+        });
+    });
 
     victory.addEventListener("click", async function () {
         while(game.state !== "end"){
@@ -41,6 +44,10 @@ game.pPromise.then(() => {
             }
             await sleep(1000);
         }
+    });
+
+    reroll.addEventListener("click", function () {
+        location.reload();
     });
 
     document.addEventListener('keydown', function(event) {

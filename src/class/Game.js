@@ -31,27 +31,12 @@ export class Game extends CardApi {
             return false;
         if (this.score > 21) {
             this.state = "loose";
-            var modal = document.getElementById("myModal");
-            document.getElementById("result").textContent += this.state;
-            document.getElementById("scoreJ").textContent += this.score;
-            document.getElementById("scoreCr").textContent += this.scoreC;
-            modal.style.display = "block";
             return true;
         } else if (this.score === 21) {
             this.state = "win";
-            var modal = document.getElementById("myModal");
-            document.getElementById("result").textContent += this.state;
-            document.getElementById("scoreJ").textContent += this.score;
-            document.getElementById("scoreCr").textContent += this.scoreC;
-            modal.style.display = "block";
             return true;
         } else if (this.score < 21 && this.state === "stopped") {
             this.state = "win";
-            var modal = document.getElementById("myModal");
-            document.getElementById("result").textContent += this.state;
-            document.getElementById("scoreJ").textContent += this.score;
-            document.getElementById("scoreCr").textContent += this.scoreC;
-            modal.style.display = "block";
             return true;
         } else {
             this.state = "started";
@@ -68,27 +53,12 @@ export class Game extends CardApi {
         if (this.state === "started") {
             if (this.score < this.scoreC && this.scoreC < 21) {
                 this.state = "loose";
-                var modal = document.getElementById("myModal");
-                document.getElementById("result").textContent += this.state;
-                document.getElementById("scoreJ").textContent += this.score;
-                document.getElementById("scoreCr").textContent += this.scoreC;
-                modal.style.display = "block";
                 return true;
             } else if (this.score === 21) {
                 this.state = "win";
-                var modal = document.getElementById("myModal");
-                document.getElementById("result").textContent += this.state;
-                document.getElementById("scoreJ").textContent += this.score;
-                document.getElementById("scoreCr").textContent += this.scoreC;
-                modal.style.display = "block";
                 return true;
             } else if (this.score < this.scoreC && this.score < 21) {
                 this.state = "win";
-                var modal = document.getElementById("myModal");
-                document.getElementById("result").textContent += this.state;
-                document.getElementById("scoreJ").textContent += this.score;
-                document.getElementById("scoreCr").textContent += this.scoreC;
-                modal.style.display = "block";
                 return true;
             } else {
                 this.state = "started";
@@ -114,6 +84,7 @@ export class Game extends CardApi {
             /**** RETEST SI ON A GAGNE/PERDU ****/
             if (this.isFinish()) {
                 alert(`Le jeu est fini : ${this.state}`);
+                this.majModal();
                 window.navigator.vibrate([1000, 1000, 2000]);
             }
         });
@@ -138,10 +109,19 @@ export class Game extends CardApi {
             if (this.scoreC > 10) {
                 if (this.isFinish2()) {
                     window.navigator.vibrate([1000, 1000, 2000]);
+                    this.majModal();
                     this.state = "end";
                     return;
                 }
             }
         });
+    }
+
+    majModal(){
+        let modal = document.getElementById("myModal");
+        document.getElementById("result").textContent += this.state;
+        document.getElementById("scoreJ").textContent += this.score;
+        document.getElementById("scoreCr").textContent += this.scoreC;
+        modal.style.display = "block";
     }
 }
