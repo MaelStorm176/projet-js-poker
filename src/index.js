@@ -1,5 +1,5 @@
 import { Game } from "./class/Game.js"
-import { setup } from "../librairies/setup.js"
+import {setup, sleep} from "../librairies/setup.js"
 setup();
 const new_card = document.getElementById("deck");
 const shuffle = document.getElementById("shuffle");
@@ -39,8 +39,8 @@ game.pPromise.then(() => {
             } catch (e) {
                 console.log(e);
             }
+            await sleep(1000);
         }
-        //game.isFinish2();
     });
 
     document.addEventListener('keydown', function(event) {

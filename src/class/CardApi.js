@@ -1,6 +1,5 @@
-import { setupDrawCardJoueur } from "../../librairies/setup.js"
-import { DrawCardJoueur } from "../../librairies/setup.js"
-import { insertAfter } from "../../librairies/setup.js"
+import {DrawCardJoueur, setupDrawCardJoueur} from "../../librairies/setup.js"
+
 export class CardApi {
     url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
     url_shuffle;
@@ -42,8 +41,7 @@ export class CardApi {
 
     async shuffleDeck() {
         const response = await fetch(this.url_shuffle);
-        const shuffle = await response.json();
-        return shuffle;
+        return await response.json();
     }
 
     createDivCard(card, id, x, y) {
@@ -80,25 +78,10 @@ export class CardApi {
     }
 
     createDivCardCroup(card, id, x, y) {
-        /*const new_div_image = document.createElement("div");
-        //new_div_image.style.position = "absolute";
-        const newImg = new Image(150, 200);
-        newImg.style.transform = "rotate(-10deg)";*/
-
-        /**** SCORE DE LA CARTE ****/
-        /*let scoreC = card.code.charAt(0);
-        let textScoreC = document.createElement("p");
-        textScoreC.innerText = "Valeur = " + this.value[scoreC];*/
-
         /**** AJOUT IMAGE ****/
-        //newImg.src = card.image;
-        console.log(id);
-        console.log(card);
         let new_image = setupDrawCardJoueur(card.image, x, y)
         new_image.style.zIndex = "1";
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
-        //new_div_image.appendChild(textScoreX);
-        //this.div_cartes.appendChild(document.getElementById(id));
         new_image.animate(
             [
                 // keyframes

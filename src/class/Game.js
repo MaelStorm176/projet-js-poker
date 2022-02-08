@@ -2,6 +2,16 @@ import { CardApi } from './CardApi.js'
 import { sleep } from '../../librairies/setup.js'
 
 export class Game extends CardApi {
+    /**
+     *
+     * @param state * Etat de la partie ["started","win","loose","end"]
+     * @param score * Score du joueur
+     * @param dev   * Mode developpeur
+     * @param span_score * Le span ou le score s'affiche
+     * @param carte_rest * NB de cartes restantes
+     * @param score_croupier * Le span du socre du croupier
+     * @param scoreC * Score du croupier
+     */
     constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
         super(span_score, carte_rest, score_croupier);
         this.state = state;
@@ -11,6 +21,10 @@ export class Game extends CardApi {
     }
 
     //Si un joueur dépasse 21
+    /**
+     * Test jeu fini joueur
+     * @returns {boolean}
+     */
     isFinish() {
         //Si on est en mode dev
         if (this.dev === true)
@@ -31,6 +45,10 @@ export class Game extends CardApi {
     }
 
     //Si le croupier dépasse 21
+    /**
+     * Test jeu fini croupier
+     * @returns {boolean}
+     */
     isFinish2() {
         if (this.state === "started") {
             if (this.score < this.scoreC && this.scoreC < 21) {
@@ -49,6 +67,12 @@ export class Game extends CardApi {
         }
     }
 
+    /**
+     * Tirer nouvelle carte joueur
+     * @param id
+     * @param x
+     * @param y
+     */
     drawNewCard(id, x, y) {
         this.getNewCard().then((card) => {
             this.createDivCard(card, id, x, y);
@@ -65,6 +89,13 @@ export class Game extends CardApi {
         });
     }
 
+    /**
+     * Tirer nouvelle carte croupier
+     * @param id
+     * @param x
+     * @param y
+     * @returns {Promise<void>}
+     */
     async drawNewCardCroup(id, x, y) {
         await this.getNewCard().then((card) => {
             this.createDivCardCroup(card, id, x, y);
@@ -73,15 +104,13 @@ export class Game extends CardApi {
             this.scoreC += this.value[card.code.charAt(0)];
             this.score_croupier.textContent = "Score : " + this.scoreC;
 
-            /**** RETEST SI ON A GAGNE/PERDU ****/
+            /**** TEST SI ON A GAGNE/PERDU ****/
             if (this.scoreC > 10) {
-                if (this.isFinish2() && this.state != "end") {
-                    alert(`Le jeu est fini : ${this.state}`);
+                if (this.isFinish2()) {
                     window.navigator.vibrate([1000, 1000, 2000]);
                     this.state = "end";
+                    return;
                 }
-                console.log(sleep(10));
-                return true;
             }
         });
     }
