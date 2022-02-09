@@ -51,11 +51,8 @@ export class Game extends CardApi {
      */
     isFinish2() {
         if (this.state === "started") {
-            if (this.score < this.scoreC && this.scoreC < 21) {
+            if (this.score < this.scoreC && this.scoreC <= 21) {
                 this.state = "loose";
-                return true;
-            } else if (this.score === 21) {
-                this.state = "win";
                 return true;
             } else if (this.score < this.scoreC && this.score < 21) {
                 this.state = "win";
