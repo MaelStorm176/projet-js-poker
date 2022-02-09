@@ -19,14 +19,6 @@ const game = new Game(
     0
 );
 
-window.addEventListener('online', function(e) {
-    img_connected.style.display = "block";
-    img_disconnected.style.display = "none";
-});
-window.addEventListener('offline', function(e) {
-    img_connected.style.display = "none";
-    img_disconnected.style.display = "block";
-});
 
 const cards = {
     cards_croup: {
@@ -55,8 +47,17 @@ const cards = {
     }
 }
 
+window.addEventListener('online', function(e) {
+    img_connected.style.display = "block";
+    img_disconnected.style.display = "none";
+});
+window.addEventListener('offline', function(e) {
+    img_connected.style.display = "none";
+    img_disconnected.style.display = "block";
+});
+
 game.pPromise.then(async () => {
-    //On initialise les deux cartes de départ
+    /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
     try{
         await game.drawNewCard(
             cards.cards_player.carte1.id,
@@ -79,6 +80,7 @@ game.pPromise.then(async () => {
         game.error(e);
     }
 
+    /** INITIALISATION PREMIERE CARTE CROUPIER **/
     try {
         await game.drawNewCard(
             cards.cards_croup.carte2_croup.id,
@@ -90,7 +92,7 @@ game.pPromise.then(async () => {
         game.error(e);
     }
 
-    // EVENTS LISTENER
+    /***************** EVENTS LISTENER ***************/
     new_card.addEventListener("click", async function () {
         try {
             await game.drawNewCard(
@@ -104,12 +106,14 @@ game.pPromise.then(async () => {
         }
     });
 
+    /** SHUFFLE LE DECK **/
     shuffle.addEventListener("click", function () {
         game.shuffleDeck().then(r => {
             //ANIMATION DU DECK A FAIRE ICI
         });
     });
 
+    /** STOPPER LE JEU **/
     victory.addEventListener("click", async function () {
         while (game.state !== "end") {
             try {
@@ -126,10 +130,12 @@ game.pPromise.then(async () => {
         }
     });
 
+    /** LANCER UNE NOUVELLE PARTIE **/
     reroll.addEventListener("click", function () {
         location.reload();
     });
 
+    /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
     document.addEventListener('keydown', async function (event) {
         if (event.key === 'd') {
             try {
@@ -147,4 +153,7 @@ game.pPromise.then(async () => {
             // annuler le tirage
         }
     });
+})
+.catch((error) => {
+    console.error(error);
 });

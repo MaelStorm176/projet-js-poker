@@ -69,6 +69,7 @@ export class Game extends CardApi {
      * @param id
      * @param x
      * @param y
+     * @param croup * true | false croupier oui/non
      * @returns {Promise<void>}
      */
     async drawNewCard(id, x, y, croup) {
