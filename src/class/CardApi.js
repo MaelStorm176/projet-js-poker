@@ -1,4 +1,4 @@
-import {DrawCardJoueur, setupDrawCardJoueur} from "../../librairies/setup.js"
+import {drawCard} from "../../librairies/setup.js"
 
 export class CardApi {
     url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
@@ -46,7 +46,7 @@ export class CardApi {
 
     createDivCard(card, id, x, y) {
         /**** AJOUT IMAGE ****/
-        let new_image = DrawCardJoueur(card.image, x, y)
+        let new_image = drawCard(card.image, x, y)
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id));
         new_image.animate(
             [
@@ -63,7 +63,7 @@ export class CardApi {
 
     createDivCardCroup(card, id, x, y) {
         /**** AJOUT IMAGE ****/
-        let new_image = setupDrawCardJoueur(card.image, x, y)
+        let new_image = drawCard(card.image, x, y)
         new_image.style.zIndex = "1";
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
         new_image.animate(

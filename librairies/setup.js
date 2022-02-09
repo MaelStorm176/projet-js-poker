@@ -31,8 +31,7 @@ export function setup() {
     document.getElementById('paquet').parentNode.insertBefore(newImg, document.getElementById('carte1_croupier'));
 }
 
-export function setupDrawCardJoueur(urlCard, x, y) {
-
+export function drawCard(urlCard, x, y) {
     const newImg2 = document.createElementNS('http://www.w3.org/2000/svg', 'image');
     newImg2.setAttributeNS(null, 'x', x);
     newImg2.setAttributeNS(null, 'y', y);
@@ -41,23 +40,6 @@ export function setupDrawCardJoueur(urlCard, x, y) {
     newImg2.setAttributeNS(null, 'href', urlCard);
 
     return newImg2;
-}
-
-export function DrawCardJoueur(urlCard, x, y) {
-    let tailleX = x + 10;
-
-    const newImg2 = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    newImg2.setAttributeNS(null, 'x', tailleX);
-    newImg2.setAttributeNS(null, 'y', y);
-    newImg2.setAttributeNS(null, 'width', '110');
-    newImg2.setAttributeNS(null, 'height', '75');
-    newImg2.setAttributeNS(null, 'href', urlCard);
-
-    return newImg2;
-}
-
-export function insertAfter(referenceNode, newNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
 export function sleep(ms) {

@@ -121,6 +121,7 @@ export class Game extends CardApi {
     }
 
     error(e){
+        console.log(e);
         this.state = "ERROR";
         this.majModal();
     }
