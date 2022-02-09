@@ -81,6 +81,9 @@ export class Game extends CardApi {
             /**** RETEST SI ON A GAGNE/PERDU ****/
             if (this.isFinish()) {
                 this.majModal();
+                window.localStorage.setItem('ScoreCroupier', `${this.scoreC}`);
+                window.localStorage.setItem('ScoreJoueur', `${this.score}`);
+                window.localStorage.setItem('Etat', `${this.state}`);
                 window.navigator.vibrate([1000, 1000, 2000]);
             }
         });
@@ -117,6 +120,7 @@ export class Game extends CardApi {
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
+        
         modal.style.display = "block";
     }
 
