@@ -28,22 +28,64 @@ window.addEventListener('offline', function(e) {
     img_disconnected.style.display = "block";
 });
 
+const cards = {
+    cards_croup: {
+        carteCache: { //carte de gauche croupier
+            id: "carteCache",
+            x: "312.5",
+            y: "122.37"
+        },
+        carte2_croup: { //carte de droite croupier
+            id: "carte2_croup",
+            x: "394",
+            y: "122.37"
+        }
+    },
+    cards_player: {
+        carte1: { //carte de gauche joueur
+            id: "carte1",
+            x: "314.5",
+            y: "381.37"
+        },
+        carte2: { //carte de droite joueur
+            id: "carte2",
+            x: "395.5",
+            y: "381.37"
+        }
+    }
+}
+
 game.pPromise.then(async () => {
     //On initialise les deux cartes de départ
     try{
-        await game.drawNewCard('carte1', "314.5", "381.37");
+        await game.drawNewCard(
+            cards.cards_player.carte1.id,
+            cards.cards_player.carte1.x,
+            cards.cards_player.carte1.y,
+            false
+        );
     }catch (e) {
         game.error(e);
     }
 
     try{
-        await game.drawNewCard('carte2', "395.5", "381.37");
+        await game.drawNewCard(
+            cards.cards_player.carte2.id,
+            cards.cards_player.carte2.x,
+            cards.cards_player.carte2.y,
+            false
+        );
     }catch (e) {
         game.error(e);
     }
 
     try {
-        await game.drawNewCardCroup('carte2_croup', "394", "122.37");
+        await game.drawNewCard(
+            cards.cards_croup.carte2_croup.id,
+            cards.cards_croup.carte2_croup.x,
+            cards.cards_croup.carte2_croup.y,
+            true
+        );
     } catch (e) {
         game.error(e);
     }
@@ -51,7 +93,12 @@ game.pPromise.then(async () => {
     // EVENTS LISTENER
     new_card.addEventListener("click", async function () {
         try {
-            await game.drawNewCard('carte1', "315.5", "381.37");
+            await game.drawNewCard(
+                cards.cards_player.carte1.id,
+                cards.cards_player.carte1.x,
+                cards.cards_player.carte1.y,
+                false
+            );
         } catch (e) {
             game.error(e);
         }
@@ -66,7 +113,12 @@ game.pPromise.then(async () => {
     victory.addEventListener("click", async function () {
         while (game.state !== "end") {
             try {
-                await game.drawNewCardCroup('carteCache', "312.5", "122.37");
+                await game.drawNewCard(
+                    cards.cards_croup.carteCache.id,
+                    cards.cards_croup.carteCache.x,
+                    cards.cards_croup.carteCache.y,
+                    true
+                );
             } catch (e) {
                 game.error(e);
             }
@@ -81,7 +133,12 @@ game.pPromise.then(async () => {
     document.addEventListener('keydown', async function (event) {
         if (event.key === 'd') {
             try {
-                await game.drawNewCard('carte1', "315.5", "381.37"); // On tire une carte
+                await game.drawNewCard(
+                    cards.cards_player.carte1.id,
+                    cards.cards_player.carte1.x,
+                    cards.cards_player.carte1.y,
+                    false
+                ); // On tire une carte
             } catch (e) {
                 game.error(e);
             }

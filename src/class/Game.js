@@ -1,7 +1,7 @@
 import { CardApi } from './CardApi.js'
-import { sleep } from '../../librairies/setup.js'
 
 export class Game extends CardApi {
+
     /**
      *
      * @param state * Etat de la partie ["started","win","loose","end"]
@@ -25,7 +25,7 @@ export class Game extends CardApi {
      * Test jeu fini joueur
      * @returns {boolean}
      */
-    isFinish() {
+    isFinishPlayer() {
         //Si on est en mode dev
         if (this.dev === true)
             return false;
@@ -49,7 +49,7 @@ export class Game extends CardApi {
      * Test jeu fini croupier
      * @returns {boolean}
      */
-    isFinish2() {
+    isFinishCroupier() {
         if (this.state === "started") {
             if (this.score < this.scoreC && this.scoreC <= 21) {
                 this.state = "loose";
@@ -69,50 +69,39 @@ export class Game extends CardApi {
      * @param id
      * @param x
      * @param y
-     */
-    async drawNewCard(id, x, y) {
-        await this.getNewCard().then((card) => {
-            this.createDivCard(card, id, x, y);
-
-            /**** CARTES RESTANTES ****/
-            this.score += this.value[card.code.charAt(0)];
-            this.span_score.textContent = "Score : " + this.score;
-
-            /**** RETEST SI ON A GAGNE/PERDU ****/
-            if (this.isFinish()) {
-                this.majModal();
-                window.localStorage.setItem('ScoreCroupier', `${this.scoreC}`);
-                window.localStorage.setItem('ScoreJoueur', `${this.score}`);
-                window.localStorage.setItem('Etat', `${this.state}`);
-                window.navigator.vibrate([1000, 1000, 2000]);
-            }
-        });
-    }
-
-    /**
-     * Tirer nouvelle carte croupier
-     * @param id
-     * @param x
-     * @param y
      * @returns {Promise<void>}
      */
-    async drawNewCardCroup(id, x, y) {
-        await this.getNewCard().then((card) => {
-            this.createDivCardCroup(card, id, x, y);
+    async drawNewCard(id, x, y, croup) {
+        await this.getNewCard()
+            .then((card) => {
+                this.createDivCard(card, id, x, y);
 
-            /**** CARTES RESTANTES ****/
-            this.scoreC += this.value[card.code.charAt(0)];
-            this.score_croupier.textContent = "Score : " + this.scoreC;
+                if (croup === true){
+                    this.majScoreCroupier(card);
+                }else if(croup === false){
+                    this.majScoreJoueur(card);
+                }
 
-            /**** TEST SI ON A GAGNE/PERDU ****/
-            if (this.scoreC > 10) {
-                if (this.isFinish2()) {
-                    window.navigator.vibrate([1000, 1000, 2000]);
+                /**** RETEST SI ON A GAGNE/PERDU ****/
+                if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                     this.majModal();
+                    window.localStorage.setItem('ScoreCroupier', `${this.scoreC}`);
+                    window.localStorage.setItem('ScoreJoueur', `${this.score}`);
+                    window.localStorage.setItem('Etat', `${this.state}`);
+                    window.navigator.vibrate([1000, 1000, 2000]);
                     this.state = "end";
                 }
-            }
-        });
+            });
+    }
+
+    majScoreJoueur(card){
+        this.score += this.value[card.code.charAt(0)];
+        this.span_score.textContent = "Score : " + this.score;
+    }
+
+    majScoreCroupier(card){
+        this.scoreC += this.value[card.code.charAt(0)];
+        this.score_croupier.textContent = "Score : " + this.scoreC;
     }
 
     majModal(){
