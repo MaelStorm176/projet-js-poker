@@ -45,25 +45,9 @@ export class CardApi {
     }
 
     createDivCard(card, id, x, y) {
-        /*const new_div_image = document.createElement("div");
-        //new_div_image.style.position = "absolute";
-        const newImg = new Image(150, 200);
-        newImg.style.transform = "rotate(-10deg)";*/
-
-        /**** SCORE DE LA CARTE ****/
-        /*let scoreX = card.code.charAt(0);
-        let textScoreX = document.createElement("p");
-        textScoreX.innerText = "Valeur = " + this.value[scoreX];*/
-
         /**** AJOUT IMAGE ****/
-        //newImg.src = card.image;
-        console.log(id);
-        console.log(card);
         let new_image = DrawCardJoueur(card.image, x, y)
-
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id));
-        //new_div_image.appendChild(textScoreX);
-        //this.div_cartes.appendChild(document.getElementById(id));
         new_image.animate(
             [
                 // keyframes
