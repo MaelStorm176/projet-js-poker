@@ -28,30 +28,47 @@ window.addEventListener('offline', function(e) {
     img_disconnected.style.display = "block";
 });
 
-game.pPromise.then(() => {
+game.pPromise.then(async () => {
     //On initialise les deux cartes de départ
-    game.drawNewCard('carte1', "314.5", "381.37");
-    game.drawNewCard('carte2', "395.5", "381.37");
+    try{
+        await game.drawNewCard('carte1', "314.5", "381.37");
+    }catch (e) {
+        game.error(e);
+    }
 
-    game.drawNewCardCroup('carte2_croup', "394", "122.37");
+    try{
+        await game.drawNewCard('carte2', "395.5", "381.37");
+    }catch (e) {
+        game.error(e);
+    }
+
+    try {
+        await game.drawNewCardCroup('carte2_croup', "394", "122.37");
+    } catch (e) {
+        game.error(e);
+    }
 
     // EVENTS LISTENER
-    new_card.addEventListener("click", function() {
-        game.drawNewCard('carte1', "315.5", "381.37");
+    new_card.addEventListener("click", async function () {
+        try {
+            await game.drawNewCard('carte1', "315.5", "381.37");
+        } catch (e) {
+            game.error(e);
+        }
     });
 
-    shuffle.addEventListener("click", function() {
+    shuffle.addEventListener("click", function () {
         game.shuffleDeck().then(r => {
             //ANIMATION DU DECK A FAIRE ICI
         });
     });
 
     victory.addEventListener("click", async function () {
-        while(game.state !== "end"){
+        while (game.state !== "end") {
             try {
                 await game.drawNewCardCroup('carteCache', "312.5", "122.37");
             } catch (e) {
-                console.log(e);
+                game.error(e);
             }
             await sleep(1000);
         }
@@ -61,9 +78,13 @@ game.pPromise.then(() => {
         location.reload();
     });
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', async function (event) {
         if (event.key === 'd') {
-            game.drawNewCard('carte1',"315.5", "381.37"); // On tire une carte
+            try {
+                await game.drawNewCard('carte1', "315.5", "381.37"); // On tire une carte
+            } catch (e) {
+                game.error(e);
+            }
         }
         if (event.key === 'c') {
             // annuler le tirage

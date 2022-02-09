@@ -70,17 +70,16 @@ export class Game extends CardApi {
      * @param x
      * @param y
      */
-    drawNewCard(id, x, y) {
-        this.getNewCard().then((card) => {
+    async drawNewCard(id, x, y) {
+        await this.getNewCard().then((card) => {
             this.createDivCard(card, id, x, y);
-            this.state = 'joueur';
+
             /**** CARTES RESTANTES ****/
             this.score += this.value[card.code.charAt(0)];
             this.span_score.textContent = "Score : " + this.score;
 
             /**** RETEST SI ON A GAGNE/PERDU ****/
             if (this.isFinish()) {
-                alert(`Le jeu est fini : ${this.state}`);
                 this.majModal();
                 window.navigator.vibrate([1000, 1000, 2000]);
             }
@@ -108,7 +107,6 @@ export class Game extends CardApi {
                     window.navigator.vibrate([1000, 1000, 2000]);
                     this.majModal();
                     this.state = "end";
-                    return;
                 }
             }
         });
@@ -120,5 +118,10 @@ export class Game extends CardApi {
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
         modal.style.display = "block";
+    }
+
+    error(e){
+        this.state = "ERROR";
+        this.majModal();
     }
 }
