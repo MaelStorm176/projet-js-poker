@@ -81,9 +81,9 @@ export class Game extends CardApi {
             /**** RETEST SI ON A GAGNE/PERDU ****/
             if (this.isFinish()) {
                 this.majModal();
-                window.localStorage.setItem('ScoreCroupier', `${this.scoreC}`);
-                window.localStorage.setItem('ScoreJoueur', `${this.score}`);
-                window.localStorage.setItem('Etat', `${this.state}`);
+                var data = this.getScoreboard();
+                this.setScoreboard(data[0], data[1], data[2]);
+                console.log(data);
                 window.navigator.vibrate([1000, 1000, 2000]);
             }
         });
@@ -107,6 +107,8 @@ export class Game extends CardApi {
             /**** TEST SI ON A GAGNE/PERDU ****/
             if (this.scoreC > 10) {
                 if (this.isFinish2()) {
+                    var data = this.getScoreboard();
+                    this.setScoreboard(data[0], data[1], data[2]);
                     window.navigator.vibrate([1000, 1000, 2000]);
                     this.majModal();
                     this.state = "end";
@@ -115,16 +117,47 @@ export class Game extends CardApi {
         });
     }
 
-    majModal(){
+    majModal() {
         let modal = document.getElementById("myModal");
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
-        
+
         modal.style.display = "block";
     }
 
-    error(e){
+    setScoreboard(scoreCroup, scoreJoueur, statut) {
+        if (scoreCroup != null && scoreJoueur != null && statut != null) {
+            var scoreCroupier = { scoreCroup };
+            var scoreJou = { scoreJoueur };
+            var stat = { statut };
+            console.log(scoreJou);
+            console.log(scoreCroupier);
+            stat = stat['statut'] + "," + this.state;
+            scoreJou = scoreJou['scoreJoueur'] + "," + this.score;
+            scoreCroupier = scoreCroupier['scoreCroup'] + "," + this.scoreC;
+        } else {
+            var scoreCroupier = this.scoreC;
+            var scoreJou = this.score;
+            var stat = this.state;
+        }
+
+        window.localStorage.setItem('ScoreCroupier', scoreCroupier);
+        window.localStorage.setItem('ScoreJoueur', scoreJou);
+        window.localStorage.setItem('StatutPartie', stat);
+    }
+
+    getScoreboard() {
+        if (window.localStorage.getItem('ScoreCroupier') != "") {
+            let scoreCroup = window.localStorage.getItem('ScoreCroupier');
+            let scoreJoueur = window.localStorage.getItem('ScoreJoueur');
+            let statut = window.localStorage.getItem('StatutPartie');
+
+            return [scoreCroup, scoreJoueur, statut];
+        }
+    }
+
+    error(e) {
         console.log(e);
         this.state = "ERROR";
         this.majModal();
