@@ -11,7 +11,6 @@ export class Game extends CardApi {
      * @param carte_rest * NB de cartes restantes
      * @param score_croupier * Le span du socre du croupier
      * @param scoreC * Score du croupier
-     * @param deck_id
      */
     constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
         super(span_score, carte_rest, score_croupier);
@@ -19,6 +18,8 @@ export class Game extends CardApi {
         this.score = score;
         this.dev = dev; //Debugging en mode dev
         this.scoreC = scoreC;
+
+        this.game_id = "game-"+Math.random();
     }
 
 
@@ -86,9 +87,8 @@ export class Game extends CardApi {
                 /**** RETEST SI ON A GAGNE/PERDU ****/
                 if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                     this.majModal();
-                    window.localStorage.setItem('ScoreCroupier', `${this.scoreC}`);
-                    window.localStorage.setItem('ScoreJoueur', `${this.score}`);
-                    window.localStorage.setItem('Etat', `${this.state}`);
+                    this.store(); //Enregistre la partie;
+                    console.log("Partie sauvegardée : ",this);
                     window.navigator.vibrate([1000, 1000, 2000]);
                     this.state = "end";
                 }
@@ -135,7 +135,10 @@ export class Game extends CardApi {
         this.majModal();
     }
 
+    /**
+     * Enregistre l'objet game dans le local storage
+     */
     store(){
-
+        window.localStorage.setItem(this.game_id,JSON.stringify(this));
     }
 }
