@@ -13,8 +13,8 @@ export class Game extends CardApi {
      * @param scoreC * Score du croupier
      * @param deck_id
      */
-    constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC, deck_id = null) {
-        super(span_score, carte_rest, score_croupier, deck_id);
+    constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
+        super(span_score, carte_rest, score_croupier);
         this.state = state;
         this.score = score;
         this.dev = dev; //Debugging en mode dev
