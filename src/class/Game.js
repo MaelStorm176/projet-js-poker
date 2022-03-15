@@ -11,16 +11,17 @@ export class Game extends CardApi {
      * @param carte_rest * NB de cartes restantes
      * @param score_croupier * Le span du socre du croupier
      * @param scoreC * Score du croupier
+     * @param deck_id
      */
-    constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC) {
-        super(span_score, carte_rest, score_croupier);
+    constructor(state, score, dev, span_score, carte_rest, score_croupier, scoreC, deck_id = null) {
+        super(span_score, carte_rest, score_croupier, deck_id);
         this.state = state;
         this.score = score;
         this.dev = dev; //Debugging en mode dev
         this.scoreC = scoreC;
     }
 
-    //Si un joueur dépasse 21
+
     /**
      * Test jeu fini joueur
      * @returns {boolean}
@@ -44,9 +45,8 @@ export class Game extends CardApi {
         }
     }
 
-    //Si le croupier dépasse 21
     /**
-     * Test jeu fini croupier
+     * Test jeu fini croupier si il dépasse 21
      * @returns {boolean}
      */
     isFinishCroupier() {
@@ -95,16 +95,27 @@ export class Game extends CardApi {
             });
     }
 
+    /**
+     * Met à jour le score du joueur en fonction de la carte tiré
+     * @param card
+     */
     majScoreJoueur(card){
         this.score += this.value[card.code.charAt(0)];
         this.span_score.textContent = "Score : " + this.score;
     }
 
+    /**
+     * Met à jour le score du croupier en fonction de la carte tiré
+     * @param card
+     */
     majScoreCroupier(card){
         this.scoreC += this.value[card.code.charAt(0)];
         this.score_croupier.textContent = "Score : " + this.scoreC;
     }
 
+    /**
+     * Affiche la modal de résultats avec les scores du joueur + croupier
+     */
     majModal(){
         let modal = document.getElementById("myModal");
         document.getElementById("result").textContent += this.state;
@@ -114,9 +125,17 @@ export class Game extends CardApi {
         modal.style.display = "block";
     }
 
+    /**
+     * Gestion des errerus lors du jeu
+     * @param e
+     */
     error(e){
         console.log(e);
         this.state = "ERROR";
         this.majModal();
+    }
+
+    store(){
+
     }
 }

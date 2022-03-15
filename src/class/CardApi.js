@@ -58,26 +58,15 @@ export class CardApi {
         return await response.json();
     }
 
+    /**
+     * A partir d'une carte retourner par l'API, la fonction va créer la div représentant la carte et l'animer
+     * @param card
+     * @param id
+     * @param x
+     * @param y
+     */
     createDivCard(card, id, x, y) {
         let new_image = drawCard(card.image, x, y);
-        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
-        new_image.animate(
-            [
-                // keyframes
-                { transform: 'translateY(-300px)' },
-                { transform: 'translateY(0px)' }
-            ], {
-                // timing options
-                duration: 1000,
-                iterations: 1
-            }
-        );
-    }
-
-    createDivCardCroup(card, id, x, y) {
-        /**** AJOUT IMAGE ****/
-        let new_image = drawCard(card.image, x, y)
-        new_image.style.zIndex = "1";
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
         new_image.animate(
             [
