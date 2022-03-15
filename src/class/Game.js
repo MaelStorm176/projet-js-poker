@@ -139,6 +139,35 @@ export class Game extends CardApi {
      * Enregistre l'objet game dans le local storage
      */
     store(){
-        window.localStorage.setItem(this.game_id,JSON.stringify(this));
+        window.localStorage.setItem(this.game_id,Game.jsonEncode(this));
     }
+
+    /**
+     * Decode un JSON en objet GAME
+     * @returns {Game|null}
+     * @param {string} game_encoded
+     */
+    static jsonDecode(game_encoded) {
+        const game_decoded = JSON.parse(game_encoded);
+        if (game_decoded instanceof Game){
+            return game_decoded;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * Encode en JSON un objet GAME
+     * @param {Game} game_decoded
+     * @returns {string|null}
+     */
+    static jsonEncode(game_decoded){
+        const game_encoded = JSON.stringify(game_decoded);
+        if (game_encoded !== ""){
+            return game_encoded
+        }else{
+            return null;
+        }
+    }
+
 }
