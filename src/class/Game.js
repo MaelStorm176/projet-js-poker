@@ -1,7 +1,7 @@
 import { CardApi } from './CardApi.js'
+import { sleep } from '../../librairies/setup.js'
 
 export class Game extends CardApi {
-
     /**
      *
      * @param state * Etat de la partie ["started","win","loose","end"]
@@ -25,7 +25,7 @@ export class Game extends CardApi {
      * Test jeu fini joueur
      * @returns {boolean}
      */
-    isFinishPlayer() {
+    isFinish() {
         //Si on est en mode dev
         if (this.dev === true)
             return false;
@@ -49,7 +49,7 @@ export class Game extends CardApi {
      * Test jeu fini croupier
      * @returns {boolean}
      */
-    isFinishCroupier() {
+    isFinish2() {
         if (this.state === "started") {
             if (this.score < this.scoreC && this.scoreC <= 21) {
                 this.state = "loose";
@@ -69,81 +69,59 @@ export class Game extends CardApi {
      * @param id
      * @param x
      * @param y
-     * @param croup * true | false croupier oui/non
+     */
+    async drawNewCard(id, x, y) {
+        await this.getNewCard().then((card) => {
+            this.createDivCard(card, id, x, y);
+
+            /**** CARTES RESTANTES ****/
+            this.score += this.value[card.code.charAt(0)];
+            this.span_score.textContent = "Score : " + this.score;
+
+            /**** RETEST SI ON A GAGNE/PERDU ****/
+            if (this.isFinish()) {
+                this.majModal();
+                var data = this.getScoreboard();
+                this.setScoreboard(data[0], data[1], data[2]);
+                console.log(data);
+                window.navigator.vibrate([1000, 1000, 2000]);
+            }
+        });
+    }
+
+    /**
+     * Tirer nouvelle carte croupier
+     * @param id
+     * @param x
+     * @param y
      * @returns {Promise<void>}
      */
-    async drawNewCard(id, x, y, croup) {
-        await this.getNewCard()
-            .then((card) => {
-                this.createDivCard(card, id, x, y);
+    async drawNewCardCroup(id, x, y) {
+        await this.getNewCard().then((card) => {
+            this.createDivCardCroup(card, id, x, y);
 
-                if (croup === true){
-                    this.majScoreCroupier(card);
-                }else if(croup === false){
-                    this.majScoreJoueur(card);
-                }
+            /**** CARTES RESTANTES ****/
+            this.scoreC += this.value[card.code.charAt(0)];
+            this.score_croupier.textContent = "Score : " + this.scoreC;
 
-                /**** RETEST SI ON A GAGNE/PERDU ****/
-                if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
+            /**** TEST SI ON A GAGNE/PERDU ****/
+            if (this.scoreC > 10) {
+                if (this.isFinish2()) {
                     var data = this.getScoreboard();
-                    console.log(data);
-                    if(data[0] != null){
-                        console.log('ok');
-                        var data1 = data[0].split(',');
-                        var data2 = data[1].split(',');
-                        var data3 = data[2].split(',');
-                        console.log(data3.length);
-                        if(data3.length > 5){
-                            var stat = data3.shift();
-                            data3.toString();
-                        }else{
-                            var data3 = data[2];
-                        }
-                        if(data2.length > 5){
-                            var scoreJou = data2.shift();
-                            data2.toString();
-                        }else{
-                            var data2 = data[1];
-                        }
-                        if(data1.length > 5){
-                            var scoreCroupier = data1.shift();
-                            data1.toString();
-                        }else{
-                            var data1 = data[0];
-                        }
-                    }else{
-                        var data1 = data[0]
-                        var data2 = data[1]
-                        var data3 = data[2]
-                    }
-                    this.setScoreboard(data1, data2, data3);
+                    this.setScoreboard(data[0], data[1], data[2]);
                     window.navigator.vibrate([1000, 1000, 2000]);
-                    this.majModal(data1, data2, data3);
+                    this.majModal();
                     this.state = "end";
                 }
-            });
+            }
+        });
     }
 
-    majScoreJoueur(card){
-        this.score += this.value[card.code.charAt(0)];
-        this.span_score.textContent = "Score : " + this.score;
-    }
-
-    majScoreCroupier(card){
-        this.scoreC += this.value[card.code.charAt(0)];
-        this.score_croupier.textContent = "Score : " + this.scoreC;
-    }
-
-    majModal(data1, data2, data3) {
+    majModal() {
         let modal = document.getElementById("myModal");
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
-
-        for(var i = 0; i<5; i++){
-            var j = i+1;
-            document.getElementById('score'+j).textContent += data1[i] + " - " + data3[i] + " - " + data2[i];
-        }
 
         modal.style.display = "block";
     }
@@ -153,9 +131,8 @@ export class Game extends CardApi {
             var scoreCroupier = { scoreCroup };
             var scoreJou = { scoreJoueur };
             var stat = { statut };
-            //console.log(stat);
-            //console.log(scoreJou);
-            //console.log(scoreCroupier);
+            console.log(scoreJou);
+            console.log(scoreCroupier);
             stat = stat['statut'] + "," + this.state;
             scoreJou = scoreJou['scoreJoueur'] + "," + this.score;
             scoreCroupier = scoreCroupier['scoreCroup'] + "," + this.scoreC;
@@ -164,6 +141,7 @@ export class Game extends CardApi {
             var scoreJou = this.score;
             var stat = this.state;
         }
+
         window.localStorage.setItem('ScoreCroupier', scoreCroupier);
         window.localStorage.setItem('ScoreJoueur', scoreJou);
         window.localStorage.setItem('StatutPartie', stat);
