@@ -22,6 +22,12 @@ export class CardApi {
         "K": 10
     }
 
+    /**
+     * Constructeur
+     * @param span_score * Span où s'affiche le score du joueur
+     * @param carte_rest * Span où le nb de cartes restantes s'affiche
+     * @param score_croupier * Span où le score du croupier s'affiche
+     */
     constructor(span_score, carte_rest, score_croupier) {
         this.span_score = document.getElementById("score");
         this.carte_rest = document.getElementById("carte_rest");
@@ -29,6 +35,10 @@ export class CardApi {
         this.initUrls();
     }
 
+    /**
+     * Initialise les url Shuffle / Draw
+     * @returns {Promise<void>}
+     */
     async initUrls() {
         //On récupère l'id du deck et on initialise les url "shuffle" et "draw"
         this.pPromise = fetch(this.url)
@@ -39,15 +49,18 @@ export class CardApi {
             });
     }
 
+    /**
+     * Mélange le deck
+     * @returns {Promise<any>}
+     */
     async shuffleDeck() {
         const response = await fetch(this.url_shuffle);
         return await response.json();
     }
 
     createDivCard(card, id, x, y) {
-        /**** AJOUT IMAGE ****/
-        let new_image = drawCard(card.image, x, y)
-        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id));
+        let new_image = drawCard(card.image, x, y);
+        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
         new_image.animate(
             [
                 // keyframes
@@ -79,6 +92,10 @@ export class CardApi {
         );
     }
 
+    /**
+     * Tire 1 carte
+     * @returns {Promise<*>}
+     */
     async getNewCard() {
         let card;
         await fetch(this.url_draw_1)
