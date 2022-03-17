@@ -18,9 +18,11 @@ export class Game extends CardApi {
         this.score = score;
         this.dev = dev; //Debugging en mode dev
         this.scoreC = scoreC;
+
+        this.game_id = "game-"+Math.random();
     }
 
-    //Si un joueur dépasse 21
+
     /**
      * Test jeu fini joueur
      * @returns {boolean}
@@ -44,9 +46,8 @@ export class Game extends CardApi {
         }
     }
 
-    //Si le croupier dépasse 21
     /**
-     * Test jeu fini croupier
+     * Test jeu fini croupier si il dépasse 21
      * @returns {boolean}
      */
     isFinishCroupier() {
@@ -117,6 +118,7 @@ export class Game extends CardApi {
                         var data3 = data[2]
                     }
                     this.setScoreboard(data1, data2, data3);
+                    this.store();
                     window.navigator.vibrate([1000, 1000, 2000]);
                     this.majModal(data1, data2, data3);
                     this.state = "end";
@@ -124,16 +126,28 @@ export class Game extends CardApi {
             });
     }
 
+    /**
+     * Met à jour le score du joueur en fonction de la carte tiré
+     * @param card
+     */
     majScoreJoueur(card){
         this.score += this.value[card.code.charAt(0)];
         this.span_score.textContent = "Score : " + this.score;
     }
 
+    /**
+     * Met à jour le score du croupier en fonction de la carte tiré
+     * @param card
+     */
     majScoreCroupier(card){
         this.scoreC += this.value[card.code.charAt(0)];
         this.score_croupier.textContent = "Score : " + this.scoreC;
     }
 
+
+    /**
+     * Affiche la modal de résultats avec les scores du joueur + croupier
+     */
     majModal(data1, data2, data3) {
         let modal = document.getElementById("myModal");
         document.getElementById("result").textContent += this.state;
@@ -147,6 +161,7 @@ export class Game extends CardApi {
 
         modal.style.display = "block";
     }
+
 
     setScoreboard(scoreCroup, scoreJoueur, statut) {
         if (scoreCroup != null && scoreJoueur != null && statut != null) {
@@ -179,9 +194,50 @@ export class Game extends CardApi {
         }
     }
 
-    error(e) {
+
+    /**
+     * Gestion des errerus lors du jeu
+     * @param e
+     */
+    error(e){
         console.log(e);
         this.state = "ERROR";
         this.majModal();
     }
+
+    /**
+     * Enregistre l'objet game dans le local storage
+     */
+    store(){
+        window.localStorage.setItem(this.game_id,Game.jsonEncode(this));
+    }
+
+    /**
+     * Decode un JSON en objet GAME
+     * @returns {Game|null}
+     * @param {string} game_encoded
+     */
+    static jsonDecode(game_encoded) {
+        const game_decoded = JSON.parse(game_encoded);
+        if (game_decoded instanceof Game){
+            return game_decoded;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * Encode en JSON un objet GAME
+     * @param {Game} game_decoded
+     * @returns {string|null}
+     */
+    static jsonEncode(game_decoded){
+        const game_encoded = JSON.stringify(game_decoded);
+        if (game_encoded !== ""){
+            return game_encoded
+        }else{
+            return null;
+        }
+    }
+
 }

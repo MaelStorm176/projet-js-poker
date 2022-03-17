@@ -1,11 +1,41 @@
 import { Game } from "./class/Game.js"
 import {setup, sleep} from "../librairies/setup.js"
 setup();
+
+/**
+ * Le deck en haut à gauche
+ * @type {HTMLElement}
+ */
 const new_card = document.getElementById("deck");
+
+/**
+ * Le bouton mélanger
+ * @type {HTMLElement}
+ */
 const shuffle = document.getElementById("shuffle");
+
+/**
+ * Le bouton pour stopper la partie
+ * @type {HTMLElement}
+ */
 const victory = document.getElementById("victory");
+
+/**
+ * Le bouton dans la modale pour relancer une partie
+ * @type {HTMLElement}
+ */
 const reroll = document.getElementById("reroll");
+
+/**
+ * Image connecté à internet
+ * @type {HTMLElement}
+ */
 const img_connected = document.getElementById("img_connected");
+
+/**
+ * Image déconnecté de internet
+ * @type {HTMLElement}
+ */
 const img_disconnected = document.getElementById("img_disconnected");
 
 //Initialisation du jeu
@@ -92,7 +122,7 @@ game.pPromise.then(async () => {
         game.error(e);
     }
 
-    /***************** EVENTS LISTENER ***************/
+    /** EVENTS LISTENER **/
     new_card.addEventListener("click", async function () {
         try {
             await game.drawNewCard(
