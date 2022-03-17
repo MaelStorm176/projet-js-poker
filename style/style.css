@@ -103,7 +103,7 @@ body {
     width: 100%;
 }
 
-#scoreboard td, #customers th {
+#scoreboard td, #scoreboard th {
     border: 1px solid #ddd;
     padding: 8px;
 }
@@ -113,9 +113,9 @@ body {
 #scoreboard tr:hover {background-color: #ddd;}
 
 #scoreboard th {
+    text-align: center;
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
     background-color: #0E4E1D;
     color: white;
 }

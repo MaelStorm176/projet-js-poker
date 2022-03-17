@@ -94,7 +94,8 @@ export class Game extends CardApi {
                     this.majModal(scoreboard);
                     this.state = "end";
                 }
-            });
+            }
+        );
     }
 
     /**
@@ -127,10 +128,16 @@ export class Game extends CardApi {
         const scoreboard_table_body = document.getElementById('scoreboard');
 
         for (const [key, value] of Object.entries(scoreboard)) {
-            let row = scoreboard_table_body.insertRow();
-            row.insertCell(0).innerText = value.state;
-            row.insertCell(1).innerText = value.scoreC;
-            row.insertCell(2).innerText = value.score;
+            if (value !== null){
+                let row = scoreboard_table_body.insertRow();
+                row.insertCell(0).innerText = value.state;
+                row.insertCell(1).innerText = value.scoreC;
+                row.insertCell(2).innerText = value.score;
+                if (value.state === "started")
+                    row.insertCell(3).innerHTML = "<button>Continuer</button>";
+                else
+                    row.insertCell(3).innerHTML = "";
+            }
         }
 
         /*
@@ -140,7 +147,7 @@ export class Game extends CardApi {
 
         modal.style.display = "block";
     }
-    
+
 
     getScoreboard() {
         let scoreboard = [];
@@ -148,8 +155,7 @@ export class Game extends CardApi {
         if (window.localStorage.length > 0) {
             for (let i = 0; i < localStorage.length; i++){
                 key = localStorage.key(i);
-                scoreboard[key] = JSON.parse(localStorage.getItem(key));
-                console.log(key);
+                scoreboard[key] = Game.jsonDecode(localStorage.getItem(key));
             }
         }
         return scoreboard;

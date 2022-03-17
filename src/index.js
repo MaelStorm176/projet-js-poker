@@ -18,7 +18,13 @@ const shuffle = document.getElementById("shuffle");
  * Le bouton pour stopper la partie
  * @type {HTMLElement}
  */
-const victory = document.getElementById("victory");
+const stop_game = document.getElementById("stop-game");
+
+/**
+ * Le bouton pour stopper la partie
+ * @type {HTMLElement}
+ */
+const exit_game = document.getElementById("exit-game");
 
 /**
  * Le bouton dans la modale pour relancer une partie
@@ -158,7 +164,7 @@ game.pPromise.then(async () => {
     });
 
     /** STOPPER LE JEU **/
-    victory.addEventListener("click", async function () {
+    stop_game.addEventListener("click", async function () {
         while (game.state !== "end") {
             try {
                 await game.drawNewCard(
@@ -172,6 +178,15 @@ game.pPromise.then(async () => {
             }
             await sleep(1000);
         }
+    });
+
+    /** QUITTER LE JEU **/
+    exit_game.addEventListener("click", function (){
+        const scoreboard = game.getScoreboard();
+        console.log(scoreboard);
+        game.majModal(scoreboard);
+        game.store();
+        window.navigator.vibrate([1000, 1000, 2000]);
     });
 
     /** LANCER UNE NOUVELLE PARTIE **/
