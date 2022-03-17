@@ -38,7 +38,6 @@ export function drawCard(urlCard, x, y) {
     newImg2.setAttributeNS(null, 'width', '110');
     newImg2.setAttributeNS(null, 'height', '75');
     newImg2.setAttributeNS(null, 'href', urlCard);
-
     return newImg2;
 }
 
