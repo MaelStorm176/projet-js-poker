@@ -38,18 +38,11 @@ const img_connected = document.getElementById("img_connected");
  */
 const img_disconnected = document.getElementById("img_disconnected");
 
-//Initialisation du jeu
-const game = new Game(
-    "started",
-    0,
-    false,
-    "score", //Le span de score
-    "carte_rest", //La div où on affiche le nb de cartes restantes
-    "score_croupier", //La div où on affiche le score du croupier
-    0
-);
 
-
+/**
+ * Emplacements et id des decks
+ * @type {{cards_croup: {carteCache: {x: string, y: string, id: string}, carte2_croup: {x: string, y: string, id: string}}, cards_player: {carte1: {x: string, y: string, id: string}, carte2: {x: string, y: string, id: string}}}}
+ */
 const cards = {
     cards_croup: {
         carteCache: { //carte de gauche croupier
@@ -77,6 +70,24 @@ const cards = {
     }
 }
 
+
+/**
+ * Initialisation du jeu
+ * @type {Game}
+ */
+const game = new Game(
+    "started",
+    0,
+    false,
+    "score", //Le span de score
+    "carte_rest", //La div où on affiche le nb de cartes restantes
+    "score_croupier", //La div où on affiche le score du croupier
+    0
+);
+
+/**
+ * EVENTS
+ */
 window.addEventListener('online', function(e) {
     img_connected.style.display = "block";
     img_disconnected.style.display = "none";
@@ -86,6 +97,9 @@ window.addEventListener('offline', function(e) {
     img_disconnected.style.display = "block";
 });
 
+/**
+ * GESTION DU JEU
+ */
 game.pPromise.then(async () => {
     /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
     try{
