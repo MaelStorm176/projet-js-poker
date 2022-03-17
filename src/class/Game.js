@@ -86,10 +86,41 @@ export class Game extends CardApi {
 
                 /**** RETEST SI ON A GAGNE/PERDU ****/
                 if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
-                    this.majModal();
-                    this.store(); //Enregistre la partie;
-                    console.log("Partie sauvegardée : ",this);
+                    var data = this.getScoreboard();
+                    console.log(data);
+                    if(data[0] != null){
+                        console.log('ok');
+                        var data1 = data[0].split(',');
+                        var data2 = data[1].split(',');
+                        var data3 = data[2].split(',');
+                        console.log(data3.length);
+                        if(data3.length > 5){
+                            var stat = data3.shift();
+                            data3.toString();
+                        }else{
+                            var data3 = data[2];
+                        }
+                        if(data2.length > 5){
+                            var scoreJou = data2.shift();
+                            data2.toString();
+                        }else{
+                            var data2 = data[1];
+                        }
+                        if(data1.length > 5){
+                            var scoreCroupier = data1.shift();
+                            data1.toString();
+                        }else{
+                            var data1 = data[0];
+                        }
+                    }else{
+                        var data1 = data[0]
+                        var data2 = data[1]
+                        var data3 = data[2]
+                    }
+                    this.setScoreboard(data1, data2, data3);
+                    this.store();
                     window.navigator.vibrate([1000, 1000, 2000]);
+                    this.majModal(data1, data2, data3);
                     this.state = "end";
                 }
             });
@@ -113,17 +144,56 @@ export class Game extends CardApi {
         this.score_croupier.textContent = "Score : " + this.scoreC;
     }
 
+
     /**
      * Affiche la modal de résultats avec les scores du joueur + croupier
      */
-    majModal(){
+    majModal(data1, data2, data3) {
         let modal = document.getElementById("myModal");
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
-        
+
+        for(var i = 0; i<5; i++){
+            var j = i+1;
+            document.getElementById('score'+j).textContent += data1[i] + " - " + data3[i] + " - " + data2[i];
+        }
+
         modal.style.display = "block";
     }
+
+
+    setScoreboard(scoreCroup, scoreJoueur, statut) {
+        if (scoreCroup != null && scoreJoueur != null && statut != null) {
+            var scoreCroupier = { scoreCroup };
+            var scoreJou = { scoreJoueur };
+            var stat = { statut };
+            //console.log(stat);
+            //console.log(scoreJou);
+            //console.log(scoreCroupier);
+            stat = stat['statut'] + "," + this.state;
+            scoreJou = scoreJou['scoreJoueur'] + "," + this.score;
+            scoreCroupier = scoreCroupier['scoreCroup'] + "," + this.scoreC;
+        } else {
+            var scoreCroupier = this.scoreC;
+            var scoreJou = this.score;
+            var stat = this.state;
+        }
+        window.localStorage.setItem('ScoreCroupier', scoreCroupier);
+        window.localStorage.setItem('ScoreJoueur', scoreJou);
+        window.localStorage.setItem('StatutPartie', stat);
+    }
+
+    getScoreboard() {
+        if (window.localStorage.getItem('ScoreCroupier') != "") {
+            let scoreCroup = window.localStorage.getItem('ScoreCroupier');
+            let scoreJoueur = window.localStorage.getItem('ScoreJoueur');
+            let statut = window.localStorage.getItem('StatutPartie');
+
+            return [scoreCroup, scoreJoueur, statut];
+        }
+    }
+
 
     /**
      * Gestion des errerus lors du jeu
