@@ -91,7 +91,7 @@ export class CardApi {
             .then((response) => response.json())
             .then((data) => {
                 this.carte_rest.setAttribute('style', 'white-space: pre;');
-                this.carte_rest.textContent = "Carte restante: " + data.remaining;
+                this.carte_rest.textContent = "Remaining cards : " + data.remaining;
                 card = data.cards[0];
             });
         return card;

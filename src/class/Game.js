@@ -87,7 +87,7 @@ export class Game extends CardApi {
                 /**** RETEST SI ON A GAGNE/PERDU ****/
                 if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                     let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
-                    console.log(scoreboard);
+                    //console.log("Scoreboard",scoreboard);
 
                     this.store(); // On sauvegarde notre partie dans le localstorage
                     window.navigator.vibrate([1000, 1000, 2000]);
@@ -134,7 +134,7 @@ export class Game extends CardApi {
                 row.insertCell(1).innerText = value.scoreC;
                 row.insertCell(2).innerText = value.score;
                 if (value.state === "started")
-                    row.insertCell(3).innerHTML = "<button>Continuer</button>";
+                    row.insertCell(3).innerHTML = "<button onclick=''>Continuer</button>";
                 else
                     row.insertCell(3).innerHTML = "";
             }
@@ -186,11 +186,13 @@ export class Game extends CardApi {
      */
     static jsonDecode(game_encoded) {
         const game_decoded = JSON.parse(game_encoded);
+        return game_decoded;
+        /*
         if (game_decoded instanceof Game){
             return game_decoded;
         }else{
             return null;
-        }
+        }*/
     }
 
     /**
@@ -204,6 +206,17 @@ export class Game extends CardApi {
             return game_encoded
         }else{
             return null;
+        }
+    }
+
+    /**
+     *
+     * @param {string} game_id
+     */
+    static load(game_id){
+        const game = window.localStorage.getItem(game_id);
+        if (window.localStorage.getItem(game_id) !== null){
+            return Game.jsonDecode(game);
         }
     }
 
