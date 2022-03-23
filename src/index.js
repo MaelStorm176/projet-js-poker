@@ -1,6 +1,13 @@
 import { Game } from "./class/Game.js"
-import {setup, sleep} from "../librairies/setup.js"
+import {setup, sleep, getSearchParameters} from "../librairies/setup.js"
 setup();
+
+/**
+ * Les parametres passés en GET dans l'url
+ * @type {{}|{}}
+ */
+const url_params = getSearchParameters();
+console.log(url_params);
 
 /**
  * Le deck en haut à gauche
@@ -76,20 +83,27 @@ const cards = {
     }
 }
 
-
 /**
  * Initialisation du jeu
- * @type {Game}
+ * @type {Game|null}
  */
-const game = new Game(
-    "started",
-    0,
-    false,
-    "score", //Le span de score
-    "carte_rest", //La div où on affiche le nb de cartes restantes
-    "score_croupier", //La div où on affiche le score du croupier
-    0
-);
+let game = null;
+if (url_params["game_id"] !== undefined && Game.load(url_params["game_id"]) !== null){
+    game = Game.load(url_params["game_id"]);
+    console.log(game);
+}
+else{
+    game = new Game(
+        "started",
+        0,
+        false,
+        "score", //Le span de score
+        "carte_rest", //La div où on affiche le nb de cartes restantes
+        "score_croupier", //La div où on affiche le score du croupier
+        0
+    );
+}
+
 
 /**
  * EVENTS

@@ -19,7 +19,8 @@ export class Game extends CardApi {
         this.dev = dev; //Debugging en mode dev
         this.scoreC = scoreC;
 
-        this.game_id = "game-"+Math.random();
+        this.created_at =  Date.now();
+        this.game_id = "game-"+this.created_at.toString();
     }
 
 
@@ -129,14 +130,20 @@ export class Game extends CardApi {
 
         for (const [key, value] of Object.entries(scoreboard)) {
             if (value !== null){
+                let created_at = new Date(value.created_at);
+
                 let row = scoreboard_table_body.insertRow();
-                row.insertCell(0).innerText = value.state;
-                row.insertCell(1).innerText = value.scoreC;
-                row.insertCell(2).innerText = value.score;
-                if (value.state === "started")
-                    row.insertCell(3).innerHTML = "<button onclick=''>Continuer</button>";
+                row.insertCell(0).innerText = created_at.toLocaleDateString("fr-FR");
+                row.insertCell(1).innerText = value.state;
+                row.insertCell(2).innerText = value.scoreC;
+                row.insertCell(3).innerText = value.score;
+                if (value.state === "started"){
+                    let cell = row.insertCell(4);
+                    cell.innerHTML = "<button>Continuer</button>";
+                    cell.addEventListener("click",event => {Game.reload(this.game_id)});
+                }
                 else
-                    row.insertCell(3).innerHTML = "";
+                    row.insertCell(4).innerHTML = "";
             }
         }
 
@@ -158,6 +165,13 @@ export class Game extends CardApi {
                 scoreboard[key] = Game.jsonDecode(localStorage.getItem(key));
             }
         }
+        scoreboard.sort((a, b) => {
+            if (a.created_at > b.created_at)
+                return 1
+            if (a.created_at < b.created_at)
+                return -1
+            return 0
+        });
         return scoreboard;
     }
 
@@ -211,13 +225,33 @@ export class Game extends CardApi {
 
     /**
      *
-     * @param {string} game_id
+     * @param game_id
+     * @returns {Game|null}
      */
     static load(game_id){
         const game = window.localStorage.getItem(game_id);
         if (window.localStorage.getItem(game_id) !== null){
             return Game.jsonDecode(game);
+        }else{
+            return null;
         }
+    }
+
+    static reload(game_id = null){
+        let url = window.location.href;
+        if (game_id !== null){
+            if (window.location.search !== ""){
+                url = window.location.origin+'?game_id='+game_id
+            }else{
+                if (url.indexOf('?') > -1){
+                    url += '&game_id='+game_id;
+                }else{
+                    url += '?game_id='+game_id;
+                }
+            }
+        }
+        window.location.href = url;
+        window.location.reload();
     }
 
 }
