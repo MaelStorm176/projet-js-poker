@@ -7,7 +7,6 @@ setup();
  * @type {{}|{}}
  */
 const url_params = getSearchParameters();
-console.log(url_params);
 
 /**
  * Le deck en haut à gauche
@@ -88,22 +87,24 @@ const cards = {
  * @type {Game|null}
  */
 let game = null;
+/**
+ * Permet de savoir si c'est une nouvelle partie qui a été démarré
+ * @type {boolean}
+ */
+let new_game = false;
 if (url_params["game_id"] !== undefined && Game.load(url_params["game_id"]) !== null){
     game = Game.load(url_params["game_id"]);
-    console.log(game);
+    game.pPromise = game.shuffleDeck();
 }
 else{
     game = new Game(
         "started",
         0,
         false,
-        "score", //Le span de score
-        "carte_rest", //La div où on affiche le nb de cartes restantes
-        "score_croupier", //La div où on affiche le score du croupier
         0
     );
+    new_game = true;
 }
-
 
 /**
  * EVENTS
@@ -121,39 +122,60 @@ window.addEventListener('offline', function(e) {
  * GESTION DU JEU
  */
 game.pPromise.then(async () => {
-    /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
-    try{
-        await game.drawNewCard(
-            cards.cards_player.carte1.id,
-            cards.cards_player.carte1.x,
-            cards.cards_player.carte1.y,
-            false
-        );
-    }catch (e) {
-        game.error(e);
-    }
 
-    try{
-        await game.drawNewCard(
+    if (new_game === true){
+        /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
+        try{
+            await game.drawNewCard(
+                cards.cards_player.carte1.id,
+                cards.cards_player.carte1.x,
+                cards.cards_player.carte1.y,
+                false
+            );
+        }catch (e) {
+            game.error(e);
+        }
+
+        try{
+            await game.drawNewCard(
+                cards.cards_player.carte2.id,
+                cards.cards_player.carte2.x,
+                cards.cards_player.carte2.y,
+                false
+            );
+        }catch (e) {
+            game.error(e);
+        }
+
+        /** INITIALISATION PREMIERE CARTE CROUPIER **/
+        try {
+            await game.drawNewCard(
+                cards.cards_croup.carte2_croup.id,
+                cards.cards_croup.carte2_croup.x,
+                cards.cards_croup.carte2_croup.y,
+                true
+            );
+        } catch (e) {
+            game.error(e);
+        }
+    }else{
+        /** INITIALISATION CARTES JOUEUR **/
+        console.log(game.last_cards);
+        game.createDivCard(
+            game.last_cards.player,
             cards.cards_player.carte2.id,
             cards.cards_player.carte2.x,
             cards.cards_player.carte2.y,
-            false
         );
-    }catch (e) {
-        game.error(e);
-    }
 
-    /** INITIALISATION PREMIERE CARTE CROUPIER **/
-    try {
-        await game.drawNewCard(
+        /** INITIALISATION CARTE CROUPIER **/
+        console.log(game.last_cards);
+        game.createDivCard(
+            game.last_cards.croupier,
             cards.cards_croup.carte2_croup.id,
             cards.cards_croup.carte2_croup.x,
-            cards.cards_croup.carte2_croup.y,
-            true
+            cards.cards_croup.carte2_croup.y
         );
-    } catch (e) {
-        game.error(e);
     }
 
     /** EVENTS LISTENER **/
@@ -200,12 +222,13 @@ game.pPromise.then(async () => {
         console.log(scoreboard);
         game.majModal(scoreboard);
         game.store();
+        console.log(game);
         window.navigator.vibrate([1000, 1000, 2000]);
     });
 
     /** LANCER UNE NOUVELLE PARTIE **/
     reroll.addEventListener("click", function () {
-        location.reload();
+        location.replace(window.location.origin);
     });
 
     /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
