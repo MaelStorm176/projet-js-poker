@@ -94,8 +94,8 @@ export class CardApi {
         await fetch(this.url_draw_1)
             .then((response) => response.json())
             .then((data) => {
-                this.carte_rest.textContent = "Remaining cards : " + data.remaining;
                 card = data.cards[0];
+                card.remaining = data.remaining;
             });
         return card;
     }

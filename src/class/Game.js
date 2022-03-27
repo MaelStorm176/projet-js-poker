@@ -21,6 +21,7 @@ export class Game extends CardApi {
         this.created_at = Date.now();
         this.game_id = "game-" + this.created_at.toString();
         this.last_cards = {};
+        this.remainingCards = null;
     }
 
 
@@ -79,19 +80,23 @@ export class Game extends CardApi {
             .then((card) => {
                     this.createDivCard(card.image, id, x, y);
 
+                    /** REMAINING CARDS **/
+                    this.remainingCards = card.remaining;
+                    this.displayRemainingCards();console.log(card.remaining);
+
+                    /** UPDATE SCORES **/
                     if (croup === true) {
-                        this.majScoreCroupier(card);
+                        this.updateScoreCroupier(card);
                         this.last_cards["croupier"] = card.image;
                     } else if (croup === false) {
-                        this.majScoreJoueur(card);
+                        this.updateScoreJoueur(card);
                         this.last_cards["player"] = card.image;
                     }
-                    console.log(this.last_cards);
+                    this.displayScores();
 
                     /**** RETEST SI ON A GAGNE/PERDU ****/
                     if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                         let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
-                        //console.log("Scoreboard",scoreboard);
 
                         this.store(); // On sauvegarde notre partie dans le localstorage
                         window.navigator.vibrate([1000, 1000, 2000]);
@@ -106,8 +111,17 @@ export class Game extends CardApi {
      * Met à jour le score du joueur en fonction de la carte tirée
      * @param card
      */
-    majScoreJoueur(card) {
-        this.score += this.value[card.code.charAt(0)];
+    updateScoreJoueur(card) {
+        if (card.code !== undefined)
+            this.score += this.value[card.code.charAt(0)];
+        else
+            this.error("Bad card object");
+    }
+
+    /**
+     * Affiche le score du joueur sur le plateau de jeu
+     */
+    displayScoreJoueur() {
         this.span_score.textContent = "Score : " + this.score;
     }
 
@@ -115,11 +129,34 @@ export class Game extends CardApi {
      * Met à jour le score du croupier en fonction de la carte tirée
      * @param card
      */
-    majScoreCroupier(card) {
-        this.scoreC += this.value[card.code.charAt(0)];
+    updateScoreCroupier(card) {
+        if (card.code !== undefined)
+            this.scoreC += this.value[card.code.charAt(0)];
+        else
+            this.error("Bad card object");
+    }
+
+    /**
+     * Affiche le score du croupier sur le plateau de jeu
+     */
+    displayScoreCroupier() {
         this.score_croupier.textContent = "Score : " + this.scoreC;
     }
 
+    /**
+     * Affiche le score du croupier et du joueur
+     */
+    displayScores(){
+        this.displayScoreCroupier();
+        this.displayScoreJoueur();
+    }
+
+    /**
+     * Affiche le nombre de cartes restantes
+     */
+    displayRemainingCards(){
+        this.carte_rest.textContent = "Remaining cards : "+this.remainingCards;
+    }
 
     /**
      * Affiche le modal de résultats avec les scores du joueur + croupier
@@ -144,7 +181,7 @@ export class Game extends CardApi {
                     let cell = row.insertCell(4);
                     cell.innerHTML = "<button>Continuer</button>";
                     cell.addEventListener("click", event => {
-                        Game.reload(this.game_id)
+                        Game.reload(value.game_id)
                     });
                 } else
                     row.insertCell(4).innerHTML = "";
@@ -167,6 +204,7 @@ export class Game extends CardApi {
                 scoreboard[key] = Game.jsonDecode(localStorage.getItem(key));
             }
         }
+        //On trie les parties par date
         scoreboard.sort((a, b) => {
             if (a.created_at > b.created_at)
                 return 1
@@ -183,7 +221,7 @@ export class Game extends CardApi {
      * @param e
      */
     error(e) {
-        console.log(e);
+        console.error(e);
         this.state = "ERROR";
         this.majModal();
     }
@@ -245,6 +283,7 @@ export class Game extends CardApi {
             game.last_cards = game_decoded.last_cards;
             game.created_at = game_decoded.created_at;
             game.game_id = game_decoded.game_id;
+            game.remainingCards = game_decoded.remainingCards;
             return game;
         } else {
             return null;

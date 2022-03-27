@@ -160,7 +160,6 @@ game.pPromise.then(async () => {
         }
     }else{
         /** INITIALISATION CARTES JOUEUR **/
-        console.log(game.last_cards);
         game.createDivCard(
             game.last_cards.player,
             cards.cards_player.carte2.id,
@@ -169,13 +168,14 @@ game.pPromise.then(async () => {
         );
 
         /** INITIALISATION CARTE CROUPIER **/
-        console.log(game.last_cards);
         game.createDivCard(
             game.last_cards.croupier,
             cards.cards_croup.carte2_croup.id,
             cards.cards_croup.carte2_croup.x,
             cards.cards_croup.carte2_croup.y
         );
+        game.displayRemainingCards();
+        game.displayScores();
     }
 
     /** EVENTS LISTENER **/
