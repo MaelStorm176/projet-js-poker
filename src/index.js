@@ -64,7 +64,7 @@ const cards = {
         },
         carte2_croup: { //carte de droite croupier
             id: "carte2_croup",
-            x: "394",
+            x: "392.5",
             y: "122.37"
         }
     },
