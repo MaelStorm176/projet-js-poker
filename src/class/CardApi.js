@@ -92,10 +92,21 @@ export class CardApi {
     async getNewCard() {
         let card;
         await fetch(this.url_draw_1)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw new Error('Erreur serveur lors du tirage de la carte');
+            })
+            .catch((reason) => {
+                throw reason;
+            })
             .then((data) => {
                 card = data.cards[0];
                 card.remaining = data.remaining;
+            })
+            .catch((error) => {
+                throw error;
             });
         return card;
     }

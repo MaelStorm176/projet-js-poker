@@ -5,6 +5,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     color: white;
+    scroll-behavior: smooth;
 }
 
 .flex {
@@ -96,7 +97,9 @@ body {
     cursor: pointer;
 }
 
-
+/**
+SCOREBOARD
+ */
 #scoreboard {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -118,4 +121,16 @@ body {
     padding-bottom: 12px;
     background-color: #0E4E1D;
     color: white;
+}
+
+/**
+WIFI
+ */
+.wifi-status {
+    position: fixed; right: 2%; top: 2%;
+}
+
+.wifi-status img{
+    display: block;
+    max-width: 40px;
 }

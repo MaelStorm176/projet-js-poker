@@ -82,7 +82,7 @@ export class Game extends CardApi {
 
                     /** REMAINING CARDS **/
                     this.remainingCards = card.remaining;
-                    this.displayRemainingCards();console.log(card.remaining);
+                    this.displayRemainingCards();
 
                     /** UPDATE SCORES **/
                     if (croup === true) {
@@ -104,7 +104,9 @@ export class Game extends CardApi {
                         this.state = "end";
                     }
                 }
-            );
+            ).catch((error) => {
+                console.log(error);
+            });
     }
 
     /**
