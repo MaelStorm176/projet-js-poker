@@ -24,15 +24,19 @@ export class CardApi {
 
     /**
      * Constructeur
-     * @param span_score * Span où s'affiche le score du joueur
-     * @param carte_rest * Span où le nb de cartes restantes s'affiche
-     * @param score_croupier * Span où le score du croupier s'affiche
+     * @param url_draw_1
+     * @param url_shuffle
      */
-    constructor(span_score, carte_rest, score_croupier) {
+    constructor(url_draw_1=null, url_shuffle=null) {
         this.span_score = document.getElementById("score");
         this.carte_rest = document.getElementById("carte_rest");
         this.score_croupier = document.getElementById("score_croupier");
-        this.initUrls();
+        if (url_draw_1 === null || url_shuffle === null)
+            this.initUrls();
+        else{
+            this.url_shuffle = url_shuffle;
+            this.url_draw_1 = url_draw_1;
+        }
     }
 
     /**
@@ -55,18 +59,18 @@ export class CardApi {
      */
     async shuffleDeck() {
         const response = await fetch(this.url_shuffle);
-        return await response.json();
+        return response.json();
     }
 
     /**
      * A partir d'une carte retourner par l'API, la fonction va créer la div représentant la carte et l'animer
-     * @param card
+     * @param card_image
      * @param id
      * @param x
      * @param y
      */
-    createDivCard(card, id, x, y) {
-        let new_image = drawCard(card.image, x, y);
+    createDivCard(card_image, id, x, y) {
+        let new_image = drawCard(card_image, x, y);
         document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
         new_image.animate(
             [
@@ -88,11 +92,21 @@ export class CardApi {
     async getNewCard() {
         let card;
         await fetch(this.url_draw_1)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw new Error('Erreur serveur lors du tirage de la carte');
+            })
+            .catch((reason) => {
+                throw reason;
+            })
             .then((data) => {
-                this.carte_rest.setAttribute('style', 'white-space: pre;');
-                this.carte_rest.textContent = "Carte restante: " + data.remaining;
                 card = data.cards[0];
+                card.remaining = data.remaining;
+            })
+            .catch((error) => {
+                throw error;
             });
         return card;
     }

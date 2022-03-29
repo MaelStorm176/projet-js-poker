@@ -5,6 +5,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     color: white;
+    scroll-behavior: smooth;
 }
 
 .flex {
@@ -94,4 +95,42 @@ body {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+/**
+SCOREBOARD
+ */
+#scoreboard {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#scoreboard td, #scoreboard th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#scoreboard tr:nth-child(even){background-color: #f2f2f2;}
+
+#scoreboard tr:hover {background-color: #ddd;}
+
+#scoreboard th {
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #0E4E1D;
+    color: white;
+}
+
+/**
+WIFI
+ */
+.wifi-status {
+    position: fixed; right: 2%; top: 2%;
+}
+
+.wifi-status img{
+    display: block;
+    max-width: 40px;
 }

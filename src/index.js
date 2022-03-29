@@ -1,6 +1,12 @@
 import { Game } from "./class/Game.js"
-import {setup, sleep} from "../librairies/setup.js"
+import {setup, sleep, getSearchParameters} from "../librairies/setup.js"
 setup();
+
+/**
+ * Les parametres passés en GET dans l'url
+ * @type {{}|{}}
+ */
+const url_params = getSearchParameters();
 
 /**
  * Le deck en haut à gauche
@@ -18,7 +24,13 @@ const shuffle = document.getElementById("shuffle");
  * Le bouton pour stopper la partie
  * @type {HTMLElement}
  */
-const victory = document.getElementById("victory");
+const stop_game = document.getElementById("stop-game");
+
+/**
+ * Le bouton pour stopper la partie
+ * @type {HTMLElement}
+ */
+const exit_game = document.getElementById("exit-game");
 
 /**
  * Le bouton dans la modale pour relancer une partie
@@ -38,18 +50,11 @@ const img_connected = document.getElementById("img_connected");
  */
 const img_disconnected = document.getElementById("img_disconnected");
 
-//Initialisation du jeu
-const game = new Game(
-    "started",
-    0,
-    false,
-    "score", //Le span de score
-    "carte_rest", //La div où on affiche le nb de cartes restantes
-    "score_croupier", //La div où on affiche le score du croupier
-    0
-);
 
-
+/**
+ * Emplacements et id des decks
+ * @type {{cards_croup: {carteCache: {x: string, y: string, id: string}, carte2_croup: {x: string, y: string, id: string}}, cards_player: {carte1: {x: string, y: string, id: string}, carte2: {x: string, y: string, id: string}}}}
+ */
 const cards = {
     cards_croup: {
         carteCache: { //carte de gauche croupier
@@ -59,7 +64,7 @@ const cards = {
         },
         carte2_croup: { //carte de droite croupier
             id: "carte2_croup",
-            x: "394",
+            x: "392.5",
             y: "122.37"
         }
     },
@@ -77,6 +82,33 @@ const cards = {
     }
 }
 
+/**
+ * Initialisation du jeu
+ * @type {Game|null}
+ */
+let game = null;
+/**
+ * Permet de savoir si c'est une nouvelle partie qui a été démarré
+ * @type {boolean}
+ */
+let new_game = false;
+if (url_params["game_id"] !== undefined && Game.load(url_params["game_id"]) !== null){
+    game = Game.load(url_params["game_id"]);
+    game.pPromise = game.shuffleDeck();
+}
+else{
+    game = new Game(
+        "started",
+        0,
+        false,
+        0
+    );
+    new_game = true;
+}
+
+/**
+ * EVENTS
+ */
 window.addEventListener('online', function(e) {
     img_connected.style.display = "block";
     img_disconnected.style.display = "none";
@@ -86,40 +118,64 @@ window.addEventListener('offline', function(e) {
     img_disconnected.style.display = "block";
 });
 
+/**
+ * GESTION DU JEU
+ */
 game.pPromise.then(async () => {
-    /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
-    try{
-        await game.drawNewCard(
-            cards.cards_player.carte1.id,
-            cards.cards_player.carte1.x,
-            cards.cards_player.carte1.y,
-            false
-        );
-    }catch (e) {
-        game.error(e);
-    }
 
-    try{
-        await game.drawNewCard(
+    if (new_game === true){
+        /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
+        try{
+            await game.drawNewCard(
+                cards.cards_player.carte1.id,
+                cards.cards_player.carte1.x,
+                cards.cards_player.carte1.y,
+                false
+            );
+        }catch (e) {
+            game.error(e);
+        }
+
+        try{
+            await game.drawNewCard(
+                cards.cards_player.carte2.id,
+                cards.cards_player.carte2.x,
+                cards.cards_player.carte2.y,
+                false
+            );
+        }catch (e) {
+            game.error(e);
+        }
+
+        /** INITIALISATION PREMIERE CARTE CROUPIER **/
+        try {
+            await game.drawNewCard(
+                cards.cards_croup.carte2_croup.id,
+                cards.cards_croup.carte2_croup.x,
+                cards.cards_croup.carte2_croup.y,
+                true
+            );
+        } catch (e) {
+            game.error(e);
+        }
+    }else{
+        /** INITIALISATION CARTES JOUEUR **/
+        game.createDivCard(
+            game.last_cards.player,
             cards.cards_player.carte2.id,
             cards.cards_player.carte2.x,
             cards.cards_player.carte2.y,
-            false
         );
-    }catch (e) {
-        game.error(e);
-    }
 
-    /** INITIALISATION PREMIERE CARTE CROUPIER **/
-    try {
-        await game.drawNewCard(
+        /** INITIALISATION CARTE CROUPIER **/
+        game.createDivCard(
+            game.last_cards.croupier,
             cards.cards_croup.carte2_croup.id,
             cards.cards_croup.carte2_croup.x,
-            cards.cards_croup.carte2_croup.y,
-            true
+            cards.cards_croup.carte2_croup.y
         );
-    } catch (e) {
-        game.error(e);
+        game.displayRemainingCards();
+        game.displayScores();
     }
 
     /** EVENTS LISTENER **/
@@ -144,7 +200,7 @@ game.pPromise.then(async () => {
     });
 
     /** STOPPER LE JEU **/
-    victory.addEventListener("click", async function () {
+    stop_game.addEventListener("click", async function () {
         while (game.state !== "end") {
             try {
                 await game.drawNewCard(
@@ -160,9 +216,19 @@ game.pPromise.then(async () => {
         }
     });
 
+    /** QUITTER LE JEU **/
+    exit_game.addEventListener("click", function (){
+        const scoreboard = game.getScoreboard();
+        console.log(scoreboard);
+        game.majModal(scoreboard);
+        game.store();
+        console.log(game);
+        window.navigator.vibrate([1000, 1000, 2000]);
+    });
+
     /** LANCER UNE NOUVELLE PARTIE **/
     reroll.addEventListener("click", function () {
-        location.reload();
+        location.replace(window.location.origin);
     });
 
     /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
