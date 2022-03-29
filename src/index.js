@@ -1,5 +1,5 @@
 import { Game } from "./class/Game.js"
-import {setup, sleep, getSearchParameters} from "../librairies/setup.js"
+import {setup, sleep, getSearchParameters, alert_error} from "../librairies/setup.js"
 setup();
 
 /**
@@ -87,14 +87,25 @@ const cards = {
  * @type {Game|null}
  */
 let game = null;
+
 /**
  * Permet de savoir si c'est une nouvelle partie qui a été démarré
  * @type {boolean}
  */
 let new_game = false;
-if (url_params["game_id"] !== undefined && Game.load(url_params["game_id"]) !== null){
-    game = Game.load(url_params["game_id"]);
-    game.pPromise = game.shuffleDeck();
+if (url_params["game_id"] !== undefined){
+    try{
+        game = Game.load(url_params["game_id"]);
+    }catch (exception){
+        alert_error('Unable to load game '+url_params["game_id"]);
+    }
+
+    if (game !== null)
+        game.pPromise = game.shuffleDeck();
+    else{
+        alert_error('Unable to load game '+url_params["game_id"]);
+        throw new Error('game is null');
+    }
 }
 else{
     game = new Game(
@@ -122,28 +133,27 @@ window.addEventListener('offline', function(e) {
  * GESTION DU JEU
  */
 game.pPromise.then(async () => {
-
-    if (new_game === true){
+    if (new_game === true) {
         /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
-        try{
+        try {
             await game.drawNewCard(
                 cards.cards_player.carte1.id,
                 cards.cards_player.carte1.x,
                 cards.cards_player.carte1.y,
                 false
             );
-        }catch (e) {
+        } catch (e) {
             game.error(e);
         }
 
-        try{
+        try {
             await game.drawNewCard(
                 cards.cards_player.carte2.id,
                 cards.cards_player.carte2.x,
                 cards.cards_player.carte2.y,
                 false
             );
-        }catch (e) {
+        } catch (e) {
             game.error(e);
         }
 
@@ -158,7 +168,7 @@ game.pPromise.then(async () => {
         } catch (e) {
             game.error(e);
         }
-    }else{
+    } else {
         /** INITIALISATION CARTES JOUEUR **/
         game.createDivCard(
             game.last_cards.player,
@@ -217,12 +227,10 @@ game.pPromise.then(async () => {
     });
 
     /** QUITTER LE JEU **/
-    exit_game.addEventListener("click", function (){
+    exit_game.addEventListener("click", function () {
         const scoreboard = game.getScoreboard();
-        console.log(scoreboard);
         game.majModal(scoreboard);
         game.store();
-        console.log(game);
         window.navigator.vibrate([1000, 1000, 2000]);
     });
 
@@ -251,5 +259,6 @@ game.pPromise.then(async () => {
     });
 })
 .catch((error) => {
-    console.error(error);
+    alert_error("Game can't be started ! "+error);
+    console.log("Init game error",error);
 });

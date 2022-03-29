@@ -31,8 +31,9 @@ export class CardApi {
         this.span_score = document.getElementById("score");
         this.carte_rest = document.getElementById("carte_rest");
         this.score_croupier = document.getElementById("score_croupier");
-        if (url_draw_1 === null || url_shuffle === null)
+        if (url_draw_1 === null || url_shuffle === null){
             this.initUrls();
+        }
         else{
             this.url_shuffle = url_shuffle;
             this.url_draw_1 = url_draw_1;
@@ -46,10 +47,22 @@ export class CardApi {
     async initUrls() {
         //On récupère l'id du deck et on initialise les url "shuffle" et "draw"
         this.pPromise = fetch(this.url)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw new Error('CardAPI communication error');
+            })
             .then((data) => {
-                this.url_shuffle = `https://deckofcardsapi.com/api/deck/${data.deck_id}/shuffle/?remaining=true`;
-                this.url_draw_1 = `https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=1`;
+                if (data.deck_id){
+                    this.url_shuffle = `https://deckofcardsapi.com/api/deck/${data.deck_id}/shuffle/?remaining=true`;
+                    this.url_draw_1 = `https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=1`;
+                }else{
+                    throw new Error("Deck's id unknown");
+                }
+            })
+            .catch((error) => {
+                throw error;
             });
     }
 
