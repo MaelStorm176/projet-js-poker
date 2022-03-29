@@ -59,7 +59,7 @@ export class CardApi {
      */
     async shuffleDeck() {
         const response = await fetch(this.url_shuffle);
-        return await response.json();
+        return response.json();
     }
 
     /**
