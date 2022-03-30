@@ -18,7 +18,7 @@ const new_card = document.getElementById("deck");
  * Le bouton mélanger
  * @type {HTMLElement}
  */
-const shuffle = document.getElementById("shuffle");
+const shuffle = document.getElementById("shuffle-deck");
 
 /**
  * Le bouton pour stopper la partie
@@ -188,6 +188,9 @@ game.pPromise.then(async () => {
         game.displayScores();
     }
 
+    /** AUTOPLAY BACKGROUND MUSIC **/
+    document.getElementById('main_audio').play();
+
     /** EVENTS LISTENER **/
     new_card.addEventListener("click", async function () {
         try {
@@ -209,7 +212,6 @@ game.pPromise.then(async () => {
         } catch (error) {
             game.error(error);
         }
-
     });
 
     /** STOPPER LE JEU **/
