@@ -198,15 +198,18 @@ game.pPromise.then(async () => {
                 false
             );
         } catch (e) {
-            game.error(e);
+            alert_error("Unable to pick a card try again. "+e);
         }
     });
 
     /** SHUFFLE LE DECK **/
-    shuffle.addEventListener("click", function () {
-        game.shuffleDeck().then(r => {
-            //ANIMATION DU DECK A FAIRE ICI
-        });
+    shuffle.addEventListener("click", async function () {
+        try {
+            await game.shuffleDeck();
+        } catch (error) {
+            game.error(error);
+        }
+
     });
 
     /** STOPPER LE JEU **/
@@ -230,7 +233,11 @@ game.pPromise.then(async () => {
     exit_game.addEventListener("click", function () {
         const scoreboard = game.getScoreboard();
         game.majModal(scoreboard);
-        game.store();
+        try{
+            game.store();
+        }catch (e){
+            alert_error("Unable to store the current game. "+e);
+        }
         window.navigator.vibrate([1000, 1000, 2000]);
     });
 

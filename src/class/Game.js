@@ -100,7 +100,12 @@ export class Game extends CardApi {
                     if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                         let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
 
-                        this.store(); // On sauvegarde notre partie dans le localstorage
+                        try{
+                            this.store(); // On sauvegarde notre partie dans le localstorage
+                        }catch (e){
+                            throw e;
+                        }
+
                         window.navigator.vibrate([1000, 1000, 2000]);
                         this.majModal(scoreboard);
                         this.state = "end";
@@ -225,7 +230,11 @@ export class Game extends CardApi {
      * Enregistre l'objet game dans le local storage
      */
     store() {
-        window.localStorage.setItem(this.game_id, Game.jsonEncode(this));
+        const game_encoded = Game.jsonEncode(this);
+        if (game_encoded === null)
+            throw new Error("Unable to save current game");
+        else
+            window.localStorage.setItem(this.game_id, game_encoded);
     }
 
     /**

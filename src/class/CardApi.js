@@ -71,8 +71,14 @@ export class CardApi {
      * @returns {Promise<any>}
      */
     async shuffleDeck() {
-        const response = await fetch(this.url_shuffle);
-        return response.json();
+        await fetch(this.url_shuffle).then((response) => {
+            if (response.ok)
+                return response.json();
+            else
+                throw new Error('Shuffle deck error');
+        }).catch((error) => {
+            throw error;
+        });
     }
 
     /**
@@ -109,7 +115,7 @@ export class CardApi {
                 if (response.ok)
                     return response.json();
                 else
-                    throw new Error('Erreur serveur lors du tirage de la carte');
+                    throw new Error('CardAPI communication error');
             })
             .catch((reason) => {
                 throw reason;
