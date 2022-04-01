@@ -112,7 +112,7 @@ export class Game extends CardApi {
                     }
                 }
             ).catch((error) => {
-                console.log(error);
+                throw error;
             });
     }
 
@@ -172,7 +172,8 @@ export class Game extends CardApi {
      * @param scoreboard
      */
     majModal(scoreboard) {
-        let modal = document.getElementById("myModal");
+        const modal = document.getElementById("myModal");
+        const plateau = document.getElementsByClassName("plateau");
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
@@ -189,7 +190,7 @@ export class Game extends CardApi {
                 row.insertCell(3).innerText = value.score;
                 if (value.state === "started") {
                     let cell = row.insertCell(4);
-                    cell.innerHTML = "<button>Continuer</button>";
+                    cell.innerHTML = "<button class='btn'>Continuer</button>";
                     cell.addEventListener("click", () => {
                         Game.reload(value.game_id);
                     });
@@ -197,6 +198,7 @@ export class Game extends CardApi {
                     row.insertCell(4).innerHTML = "";
             }
         }
+        plateau[0].classList.add('blur');
         modal.style.display = "block";
     }
 

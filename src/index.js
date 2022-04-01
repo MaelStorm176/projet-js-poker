@@ -64,7 +64,7 @@ const cards = {
         },
         carte2_croup: { //carte de droite croupier
             id: "carte2_croup",
-            x: "392.5",
+            x: "393.25",
             y: "122.37"
         }
     },
@@ -111,7 +111,7 @@ else{
     game = new Game(
         "started",
         0,
-        false,
+        true,
         0
     );
     new_game = true;
@@ -193,24 +193,32 @@ game.pPromise.then(async () => {
 
     /** EVENTS LISTENER **/
     new_card.addEventListener("click", async function () {
-        try {
-            await game.drawNewCard(
-                cards.cards_player.carte1.id,
-                cards.cards_player.carte1.x,
-                cards.cards_player.carte1.y,
-                false
-            );
-        } catch (e) {
-            alert_error("Unable to pick a card try again. "+e);
+        if(game.state !== "end"){
+            try {
+                await game.drawNewCard(
+                    cards.cards_player.carte1.id,
+                    cards.cards_player.carte1.x,
+                    cards.cards_player.carte1.y,
+                    false
+                );
+            } catch (e) {
+                alert_error("Unable to pick a card try again.");
+            }
+        }else{
+            alert_error("Game is already at finished.");
         }
     });
 
     /** SHUFFLE LE DECK **/
     shuffle.addEventListener("click", async function () {
-        try {
-            await game.shuffleDeck();
-        } catch (error) {
-            game.error(error);
+        if(game.state !== "end") {
+            try {
+                await game.shuffleDeck();
+            } catch (error) {
+                game.error(error);
+            }
+        }else{
+            alert_error("Game is already at finished.");
         }
     });
 
@@ -227,7 +235,8 @@ game.pPromise.then(async () => {
             } catch (e) {
                 game.error(e);
             }
-            await sleep(1000);
+
+            await sleep(3000);
         }
     });
 
@@ -251,15 +260,19 @@ game.pPromise.then(async () => {
     /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
     document.addEventListener('keydown', async function (event) {
         if (event.key === 'd') {
-            try {
-                await game.drawNewCard(
-                    cards.cards_player.carte1.id,
-                    cards.cards_player.carte1.x,
-                    cards.cards_player.carte1.y,
-                    false
-                ); // On tire une carte
-            } catch (e) {
-                game.error(e);
+            if (game.state !== 'end'){
+                try {
+                    await game.drawNewCard(
+                        cards.cards_player.carte1.id,
+                        cards.cards_player.carte1.x,
+                        cards.cards_player.carte1.y,
+                        false
+                    ); // On tire une carte
+                } catch (e) {
+                    game.error(e);
+                }
+            }else{
+                alert_error('Game is already at finished.')
             }
         }
         if (event.key === 'c') {
@@ -269,5 +282,4 @@ game.pPromise.then(async () => {
 })
 .catch((error) => {
     alert_error("Game can't be started ! "+error);
-    console.log("Init game error",error);
 });
