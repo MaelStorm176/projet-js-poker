@@ -20,6 +20,14 @@ const new_card = document.getElementById("deck");
  */
 const shuffle = document.getElementById("shuffle");
 
+
+/**
+ * Le bouton pour anuler le tirage de la carte
+ * @type {HTMLElement}
+ */
+const cancel_card = document.getElementById("cancel-card");
+let flag_cancel = false;
+
 /**
  * Le bouton pour stopper la partie
  * @type {HTMLElement}
@@ -180,17 +188,47 @@ game.pPromise.then(async () => {
 
     /** EVENTS LISTENER **/
     new_card.addEventListener("click", async function () {
-        try {
-            await game.drawNewCard(
-                cards.cards_player.carte1.id,
-                cards.cards_player.carte1.x,
-                cards.cards_player.carte1.y,
-                false
-            );
-        } catch (e) {
-            game.error(e);
-        }
+        flag_cancel = false;
+        let i = 0;
+        let cancelModal = document.getElementById("cancel");
+            if (i === 0) {
+                i = 1;
+                let elem = document.getElementById("myBar");
+                let width = 1;
+                let id = setInterval(frame, 10);
+                function frame() {
+                    if (width >= 100) {
+                        clearInterval(id);
+                        i = 0;
+                    } else {
+                        width++;
+                        elem.style.width = width + "%";
+                    }
+                }
+            }
+        cancelModal.style.display = "block";
+
+            setTimeout(async function (){
+                cancelModal.style.display = 'none';
+                if(flag_cancel === false){
+                    try {
+                        await game.drawNewCard(
+                            cards.cards_player.carte1.id,
+                            cards.cards_player.carte1.x,
+                            cards.cards_player.carte1.y,
+                            false
+                        );
+                    } catch (e) {
+                        game.error(e);
+                    }
+                }
+                flag_cancel = true;
+        }, 2000)
     });
+
+    cancel_card.addEventListener("click", async function (){
+        flag_cancel = true;
+    })
 
     /** SHUFFLE LE DECK **/
     shuffle.addEventListener("click", function () {

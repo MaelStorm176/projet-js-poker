@@ -17,7 +17,6 @@ export class Game extends CardApi {
         this.score = score_joueur;
         this.dev = dev; //Debugging en mode dev
         this.scoreC = score_croupier;
-
         this.created_at = Date.now();
         this.game_id = "game-" + this.created_at.toString();
         this.last_cards = {};
