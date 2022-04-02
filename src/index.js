@@ -111,7 +111,7 @@ else{
     game = new Game(
         "started",
         0,
-        true,
+        false,
         0
     );
     new_game = true;
