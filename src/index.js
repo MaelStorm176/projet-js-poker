@@ -1,5 +1,5 @@
 import { Game } from "./class/Game.js"
-import {setup, sleep, getSearchParameters} from "../librairies/setup.js"
+import {setup, sleep, getSearchParameters, alert_error} from "../librairies/setup.js"
 setup();
 
 /**
@@ -18,7 +18,7 @@ const new_card = document.getElementById("deck");
  * Le bouton mélanger
  * @type {HTMLElement}
  */
-const shuffle = document.getElementById("shuffle");
+const shuffle = document.getElementById("shuffle-deck");
 
 /**
  * Le bouton pour stopper la partie
@@ -64,7 +64,7 @@ const cards = {
         },
         carte2_croup: { //carte de droite croupier
             id: "carte2_croup",
-            x: "392.5",
+            x: "393.25",
             y: "122.37"
         }
     },
@@ -87,14 +87,25 @@ const cards = {
  * @type {Game|null}
  */
 let game = null;
+
 /**
  * Permet de savoir si c'est une nouvelle partie qui a été démarré
  * @type {boolean}
  */
 let new_game = false;
-if (url_params["game_id"] !== undefined && Game.load(url_params["game_id"]) !== null){
-    game = Game.load(url_params["game_id"]);
-    game.pPromise = game.shuffleDeck();
+if (url_params["game_id"] !== undefined){
+    try{
+        game = Game.load(url_params["game_id"]);
+    }catch (exception){
+        alert_error('Unable to load game '+url_params["game_id"]);
+    }
+
+    if (game !== null)
+        game.pPromise = game.shuffleDeck();
+    else{
+        alert_error('Unable to load game '+url_params["game_id"]);
+        throw new Error('game is null');
+    }
 }
 else{
     game = new Game(
@@ -122,28 +133,27 @@ window.addEventListener('offline', function(e) {
  * GESTION DU JEU
  */
 game.pPromise.then(async () => {
-
-    if (new_game === true){
+    if (new_game === true) {
         /** INITIALISATION DEUX CARTES DE DEPART JOUEUR **/
-        try{
+        try {
             await game.drawNewCard(
                 cards.cards_player.carte1.id,
                 cards.cards_player.carte1.x,
                 cards.cards_player.carte1.y,
                 false
             );
-        }catch (e) {
+        } catch (e) {
             game.error(e);
         }
 
-        try{
+        try {
             await game.drawNewCard(
                 cards.cards_player.carte2.id,
                 cards.cards_player.carte2.x,
                 cards.cards_player.carte2.y,
                 false
             );
-        }catch (e) {
+        } catch (e) {
             game.error(e);
         }
 
@@ -158,7 +168,7 @@ game.pPromise.then(async () => {
         } catch (e) {
             game.error(e);
         }
-    }else{
+    } else {
         /** INITIALISATION CARTES JOUEUR **/
         game.createDivCard(
             game.last_cards.player,
@@ -178,25 +188,38 @@ game.pPromise.then(async () => {
         game.displayScores();
     }
 
+    /** AUTOPLAY BACKGROUND MUSIC **/
+    document.getElementById('main_audio').play();
+
     /** EVENTS LISTENER **/
     new_card.addEventListener("click", async function () {
-        try {
-            await game.drawNewCard(
-                cards.cards_player.carte1.id,
-                cards.cards_player.carte1.x,
-                cards.cards_player.carte1.y,
-                false
-            );
-        } catch (e) {
-            game.error(e);
+        if(game.state !== "end"){
+            try {
+                await game.drawNewCard(
+                    cards.cards_player.carte1.id,
+                    cards.cards_player.carte1.x,
+                    cards.cards_player.carte1.y,
+                    false
+                );
+            } catch (e) {
+                alert_error("Unable to pick a card try again.");
+            }
+        }else{
+            alert_error("Game is already at finished.");
         }
     });
 
     /** SHUFFLE LE DECK **/
-    shuffle.addEventListener("click", function () {
-        game.shuffleDeck().then(r => {
-            //ANIMATION DU DECK A FAIRE ICI
-        });
+    shuffle.addEventListener("click", async function () {
+        if(game.state !== "end") {
+            try {
+                await game.shuffleDeck();
+            } catch (error) {
+                game.error(error);
+            }
+        }else{
+            alert_error("Game is already at finished.");
+        }
     });
 
     /** STOPPER LE JEU **/
@@ -212,17 +235,20 @@ game.pPromise.then(async () => {
             } catch (e) {
                 game.error(e);
             }
-            await sleep(1000);
+
+            await sleep(3000);
         }
     });
 
     /** QUITTER LE JEU **/
-    exit_game.addEventListener("click", function (){
+    exit_game.addEventListener("click", function () {
         const scoreboard = game.getScoreboard();
-        console.log(scoreboard);
         game.majModal(scoreboard);
-        game.store();
-        console.log(game);
+        try{
+            game.store();
+        }catch (e){
+            alert_error("Unable to store the current game. "+e);
+        }
         window.navigator.vibrate([1000, 1000, 2000]);
     });
 
@@ -234,15 +260,19 @@ game.pPromise.then(async () => {
     /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
     document.addEventListener('keydown', async function (event) {
         if (event.key === 'd') {
-            try {
-                await game.drawNewCard(
-                    cards.cards_player.carte1.id,
-                    cards.cards_player.carte1.x,
-                    cards.cards_player.carte1.y,
-                    false
-                ); // On tire une carte
-            } catch (e) {
-                game.error(e);
+            if (game.state !== 'end'){
+                try {
+                    await game.drawNewCard(
+                        cards.cards_player.carte1.id,
+                        cards.cards_player.carte1.x,
+                        cards.cards_player.carte1.y,
+                        false
+                    ); // On tire une carte
+                } catch (e) {
+                    game.error(e);
+                }
+            }else{
+                alert_error('Game is already finished.')
             }
         }
         if (event.key === 'c') {
@@ -251,5 +281,5 @@ game.pPromise.then(async () => {
     });
 })
 .catch((error) => {
-    console.error(error);
+    alert_error("Game can't be started ! "+error);
 });

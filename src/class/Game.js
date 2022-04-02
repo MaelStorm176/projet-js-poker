@@ -12,10 +12,12 @@ export class Game extends CardApi {
      * @param url_shuffle
      */
     constructor(state, score_joueur, dev, score_croupier, url_draw_1 = null, url_shuffle = null) {
+        //Constructeur de CardAPI
         super(url_draw_1, url_shuffle);
+
         this.state = state;
         this.score = score_joueur;
-        this.dev = dev; //Debugging en mode dev
+        this.dev   = dev; //Debugging en mode dev
         this.scoreC = score_croupier;
 
         this.created_at = Date.now();
@@ -98,14 +100,19 @@ export class Game extends CardApi {
                     if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                         let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
 
-                        this.store(); // On sauvegarde notre partie dans le localstorage
+                        try{
+                            this.store(); // On sauvegarde notre partie dans le localstorage
+                        }catch (e){
+                            throw e;
+                        }
+
                         window.navigator.vibrate([1000, 1000, 2000]);
                         this.majModal(scoreboard);
                         this.state = "end";
                     }
                 }
             ).catch((error) => {
-                console.log(error);
+                throw error;
             });
     }
 
@@ -162,9 +169,11 @@ export class Game extends CardApi {
 
     /**
      * Affiche le modal de résultats avec les scores du joueur + croupier
+     * @param scoreboard
      */
     majModal(scoreboard) {
-        let modal = document.getElementById("myModal");
+        const modal = document.getElementById("myModal");
+        const plateau = document.getElementsByClassName("plateau");
         document.getElementById("result").textContent += this.state;
         document.getElementById("scoreJ").textContent += this.score;
         document.getElementById("scoreCr").textContent += this.scoreC;
@@ -181,14 +190,15 @@ export class Game extends CardApi {
                 row.insertCell(3).innerText = value.score;
                 if (value.state === "started") {
                     let cell = row.insertCell(4);
-                    cell.innerHTML = "<button>Continuer</button>";
-                    cell.addEventListener("click", event => {
-                        Game.reload(value.game_id)
+                    cell.innerHTML = "<button class='btn'>Continuer</button>";
+                    cell.addEventListener("click", () => {
+                        Game.reload(value.game_id);
                     });
                 } else
                     row.insertCell(4).innerHTML = "";
             }
         }
+        plateau[0].classList.add('blur');
         modal.style.display = "block";
     }
 
@@ -219,20 +229,14 @@ export class Game extends CardApi {
 
 
     /**
-     * Gestion des errerus lors du jeu
-     * @param e
-     */
-    error(e) {
-        console.error(e);
-        this.state = "ERROR";
-        this.majModal();
-    }
-
-    /**
      * Enregistre l'objet game dans le local storage
      */
     store() {
-        window.localStorage.setItem(this.game_id, Game.jsonEncode(this));
+        const game_encoded = Game.jsonEncode(this);
+        if (game_encoded === null)
+            throw new Error("Unable to save current game");
+        else
+            window.localStorage.setItem(this.game_id, game_encoded);
     }
 
     /**
@@ -241,7 +245,12 @@ export class Game extends CardApi {
      * @param {string} game_encoded
      */
     static jsonDecode(game_encoded) {
-        const game_decoded = JSON.parse(game_encoded);
+        let game_decoded;
+        try{
+            game_decoded = JSON.parse(game_encoded);
+        }catch (exception){
+            throw exception;
+        }
         return game_decoded;
         /*
         if (game_decoded instanceof Game){
@@ -312,4 +321,14 @@ export class Game extends CardApi {
         window.location.replace(url);
     }
 
+
+    /**
+     * Gestion des erreurs lors du jeu
+     * @param e
+     */
+    error(e) {
+        console.error(e);
+        this.state = "ERROR";
+        this.majModal();
+    }
 }

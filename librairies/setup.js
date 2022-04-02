@@ -59,3 +59,9 @@ function transformToAssocArray( prmstr ) {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export function alert_error(e){
+    const alert_box = document.getElementById("alert_box");
+    alert_box.append(e);
+    alert_box.classList.remove("d-none");
+}
