@@ -278,13 +278,13 @@ game.pPromise.then(async () => {
                     cards.cards_player.carte1.x,
                     cards.cards_player.carte1.y,
                     false
-                ); // On tire une carte
+                );
             } catch (e) {
                 game.error(e);
             }
         }
         if (event.key === 'c') {
-            // annuler le tirage
+            flag_cancel = true;
         }
     });
 })
