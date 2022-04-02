@@ -308,12 +308,12 @@ export class Game extends CardApi {
         let url = window.location.href;
         if (game_id !== null) {
             if (window.location.search !== "") {
-                url = window.location.origin + '?game_id=' + game_id
+                url = window.location.origin + window.location.pathname + '?game_id=' + game_id
             } else {
                 if (url.indexOf('?') > -1) {
-                    url = window.location.origin;
+                    url = window.location.origin + window.location.pathname;
                 } else {
-                    url = window.location.origin + '?game_id=' + game_id;
+                    url = window.location.origin + window.location.pathname + '?game_id=' + game_id;
                 }
             }
         }
