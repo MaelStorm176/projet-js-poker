@@ -11,7 +11,7 @@ export function setup() {
         imgShuffle.setAttributeNS(null, 'y', y_pos);
         imgShuffle.setAttributeNS(null, 'width', '110');
         imgShuffle.setAttributeNS(null, 'height', '75');
-        imgShuffle.setAttributeNS(null, 'href', '/img/deck.png');
+        imgShuffle.setAttributeNS(null, 'href', './img/deck.png');
         imgShuffle.id = "shuffle_"+i;
         document.getElementById('paquet').parentNode.append(imgShuffle);
     }
@@ -24,7 +24,7 @@ export function setup() {
     newImg2.setAttributeNS(null, 'y', y_pos);
     newImg2.setAttributeNS(null, 'width', '110');
     newImg2.setAttributeNS(null, 'height', '75');
-    newImg2.setAttributeNS(null, 'href', '/img/deck.png');
+    newImg2.setAttributeNS(null, 'href', './img/deck.png');
     newImg2.id = "deck";
     document.getElementById('paquet').parentNode.append(newImg2);
 
@@ -34,7 +34,7 @@ export function setup() {
     newImg.setAttributeNS(null, 'y', '122.74');
     newImg.setAttributeNS(null, 'width', '110');
     newImg.setAttributeNS(null, 'height', '75');
-    newImg.setAttributeNS(null, 'href', '/img/deck.png');
+    newImg.setAttributeNS(null, 'href', './img/deck.png');
     newImg.id = "carteCache";
     newImg.style.zIndex = "0";
     newImg.animate(
