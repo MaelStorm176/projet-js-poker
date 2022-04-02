@@ -217,6 +217,37 @@ game.pPromise.then(async () => {
             } catch (error) {
                 game.error(error);
             }
+
+            for (let i = 0; i < 3; i++) {
+                const imgShuffle = document.getElementById('shuffle_'+i);
+                imgShuffle.animate(
+                    [
+                        // keyframes
+                        { transform: 'translateY(-50px)' },
+                        { transform: 'translateY(0px)' }
+                    ],
+                    {
+                        // timing options
+                        duration: 500*i,
+                        iterations: 1
+                    }
+                );
+            }
+
+            const deckShuffle = document.getElementById('deck');
+            deckShuffle.animate(
+                [
+                    // keyframes
+                    { transform: 'translateY(-50px)' },
+                    { transform: 'translateY(0px)' }
+                ],
+                {
+                    // timing options
+                    duration: 1500,
+                    iterations: 1
+                }
+            );
+
         }else{
             alert_error("Game is already at finished.");
         }
