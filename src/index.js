@@ -272,7 +272,7 @@ game.pPromise.then(async () => {
                     game.error(e);
                 }
             }else{
-                alert_error('Game is already at finished.')
+                alert_error('Game is already finished.')
             }
         }
         if (event.key === 'c') {
