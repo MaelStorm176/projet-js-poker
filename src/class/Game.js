@@ -103,7 +103,7 @@ export class Game extends CardApi {
 
                     /**** RETEST SI ON A GAGNE/PERDU ****/
                     if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
-                        let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
+                        let scoreboard = this.getScoreboard(); //On récupère les parties stockées dans le localstorage
                         try{
                             this.store(); // On sauvegarde notre partie dans le localstorage
                         }catch (e){
