@@ -1,14 +1,34 @@
 export function setup() {
-    const newImg2 = document.createElementNS('http://www.w3.org/2000/svg', 'image');
 
-    newImg2.setAttributeNS(null, 'x', '83');
-    newImg2.setAttributeNS(null, 'y', '122.74');
+
+    /** IMAGES SHUFFLE **/
+    let i;
+    for (i = 0; i < 3; i++){
+        const imgShuffle = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        let y_pos = 122.74-(5*i);
+        let x_pos = 83 - (2.5*i);
+        imgShuffle.setAttributeNS(null, 'x', x_pos);
+        imgShuffle.setAttributeNS(null, 'y', y_pos);
+        imgShuffle.setAttributeNS(null, 'width', '110');
+        imgShuffle.setAttributeNS(null, 'height', '75');
+        imgShuffle.setAttributeNS(null, 'href', '/img/deck.png');
+        imgShuffle.id = "shuffle_"+i;
+        document.getElementById('paquet').parentNode.append(imgShuffle);
+    }
+
+    /** IMAGE AU DESSUS DU DECK **/
+    let y_pos = 122.74 - (5*i);
+    let x_pos = 83- (2.5*i);
+    const newImg2 = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    newImg2.setAttributeNS(null, 'x', x_pos);
+    newImg2.setAttributeNS(null, 'y', y_pos);
     newImg2.setAttributeNS(null, 'width', '110');
     newImg2.setAttributeNS(null, 'height', '75');
     newImg2.setAttributeNS(null, 'href', '/img/deck.png');
     newImg2.id = "deck";
-    document.getElementById('paquet').parentNode.insertBefore(newImg2, document.getElementById('paquet'));
+    document.getElementById('paquet').parentNode.append(newImg2);
 
+    /** IMAGE RETOURNEE DECK CROUPIER **/
     const newImg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
     newImg.setAttributeNS(null, 'x', '312.5');
     newImg.setAttributeNS(null, 'y', '122.74');

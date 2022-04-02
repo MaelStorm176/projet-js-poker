@@ -90,7 +90,7 @@ export class CardApi {
      */
     createDivCard(card_image, id, x, y) {
         let new_image = drawCard(card_image, x, y);
-        document.getElementById(id).parentNode.insertBefore(new_image, document.getElementById(id).nextSibling);
+        document.getElementById(id).parentNode.append(new_image, document.getElementById(id).nextSibling);
         new_image.animate(
             [
                 // keyframes
