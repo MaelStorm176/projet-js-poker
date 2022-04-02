@@ -254,7 +254,7 @@ game.pPromise.then(async () => {
 
     /** LANCER UNE NOUVELLE PARTIE **/
     reroll.addEventListener("click", function () {
-        location.replace(window.location.origin);
+        location.replace(window.location.origin+window.location.pathname);
     });
 
     /** d = Tirer une nouvelle carte joueur | c = Annuler tirage **/
