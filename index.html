@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/plateau.css">
     <link rel="stylesheet" href="./style/alert.css">
+    <link rel="stylesheet" href="./style/loading-bar.css">
     <link rel="icon" href="./img/favicon.png">
 </head>
 
@@ -35,11 +36,6 @@
                 <rect class="cls-4" x="340.94" y="381.37" width="57.45" height="75.83" rx="6.77" id="carte2_croup"/>
                 <rect class="cls-4" x="421.62" y="381.37" width="57.45" height="75.83" rx="6.77" id="carte1"/>
                 <rect class="cls-5" x="231.19" y="259.85" width="351.57" height="64.94" rx="10.72" id="carte2"/>
-                <text class="cls-6" transform="translate(285.77 303)">Poker
-                    <tspan class="cls-7" x="78.37" y="0"> </tspan>
-                    <tspan class="cls-8" x="86.18" y="0">T</tspan>
-                    <tspan x="102.86" y="0">wenty-One</tspan>
-                </text>
                 <circle class="cls-9" cx="395.11" cy="508.38" r="6.38"/>
                 <circle class="cls-9" cx="423.51" cy="508.38" r="6.38"/>
                 <circle class="cls-9" cx="535.94" cy="493.62" r="6.38"/>
@@ -74,14 +70,25 @@
                 <text font-size="13" id="score_croupier" transform="translate(264 165)" class="cls-10"></text>
 
                 <text class="cls-10" transform="translate(195.16 93.85)">Javascript Project 4IW4 - Maël Jamin - Odessa Chesneau - Raphaël Bessonnier</text>
+                <text class="cls-6" transform="translate(285.77 303)">Poker Twenty-One</text>
             </g>
         </svg>
-
     </div>
 
     <!-- Alert box -->
     <div id="alert_box" class="alert d-none">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    </div>
+
+    <!-- Modal confirmation -->
+    <div id="cancel" class="modal">
+        <div class="modal-content" style="width: 25%; height: auto">
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
+            Click for cancel the draw
+            <button id="cancel-card">Cancel</button>
+        </div>
     </div>
 
     <!-- The Modal -->

@@ -32,22 +32,24 @@ export class Game extends CardApi {
      * @returns {boolean}
      */
     isFinishPlayer() {
-        //Si on est en mode dev
-        if (this.dev === true)
-            return false;
-        if (this.score > 21) {
-            this.state = "loose";
-            return true;
-        } else if (this.score === 21) {
-            this.state = "win";
-            return true;
-        } else if (this.score < 21 && this.state === "stopped") {
-            this.state = "win";
-            return true;
-        } else {
-            this.state = "started";
-            return false;
-        }
+        if (this.state === "started"){
+            if (this.dev === true)
+                return false;
+            if (this.score > 21) {
+                this.state = "loose";
+                return true;
+            } else if (this.score === 21) {
+                this.state = "win";
+                return true;
+            } else if (this.score < 21 && this.state === "stopped") {
+                this.state = "win";
+                return true;
+            } else {
+                this.state = "started";
+                return false;
+            }
+        }else return this.state !== "init";
+
     }
 
     /**
@@ -56,17 +58,20 @@ export class Game extends CardApi {
      */
     isFinishCroupier() {
         if (this.state === "started") {
-            if (this.score < this.scoreC && this.scoreC <= 21) {
+            if (this.scoreC === 21) {
                 this.state = "loose";
                 return true;
-            } else if (this.score < this.scoreC && this.score < 21) {
+            } else if (this.scoreC > 21) {
                 this.state = "win";
+                return true;
+            } else if (this.scoreC > this.score){
+                this.state = "loose";
                 return true;
             } else {
                 this.state = "started";
                 return false;
             }
-        }
+        }else return this.state !== "init";
     }
 
     /**
@@ -99,7 +104,6 @@ export class Game extends CardApi {
                     /**** RETEST SI ON A GAGNE/PERDU ****/
                     if ((croup === false && this.isFinishPlayer()) || (croup === true && this.isFinishCroupier())) {
                         let scoreboard = this.getScoreboard(); //On recupère les parties stockées dans le localstorage
-
                         try{
                             this.store(); // On sauvegarde notre partie dans le localstorage
                         }catch (e){
@@ -108,6 +112,7 @@ export class Game extends CardApi {
 
                         window.navigator.vibrate([1000, 1000, 2000]);
                         this.majModal(scoreboard);
+
                         this.state = "end";
                     }
                 }
@@ -252,12 +257,6 @@ export class Game extends CardApi {
             throw exception;
         }
         return game_decoded;
-        /*
-        if (game_decoded instanceof Game){
-            return game_decoded;
-        }else{
-            return null;
-        }*/
     }
 
     /**
