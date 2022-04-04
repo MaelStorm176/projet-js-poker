@@ -1,5 +1,6 @@
 # projet-js-poker
------Projet d'un jeu de cartes consistant à se rapprocher le plus possible d'un score de 21.
+------
+Projet d'un jeu de cartes consistant à se rapprocher le plus possible d'un score de 21.
 Le joueur gagne s’il atteint 21, ou s’il décide de s’arrêter et que le score avec la carte suivante est supérieure à 21. Chaque carte vaut sa valeur en point, sauf pour l’As qui vaut 0 point, et le roi, la reine et le valet qui valent 10 points chacun.
 
 Si le joueur dépasse 21 points ou si le croupier à un score plus proche de 21 que le joueur, il a perdu
