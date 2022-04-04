@@ -6,6 +6,7 @@ Si le joueur dépasse 21 points ou si le croupier à un score plus proche de 21 
 
 
 ================
+
 Explication des boutons:
 
 Shuffle: mélanger les cartes restantes du packet
