@@ -1,0 +1,173 @@
+@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+    html {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        overflow-x: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0E4E1D;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    scroll-behavior: smooth;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+}
+
+.flex-card {
+    display: flex;
+}
+
+.score {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.title {
+    background-color: black;
+    border: solid 1px green;
+    width: 30%;
+    border-radius: 20%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.text-upper {
+    text-transform: capitalize;
+}
+
+.column-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.d-none {
+    display: none;
+}
+
+.btn {
+    border-radius: 11px;
+    border-color: white;
+    background-color: #89110f;
+    height: 50px;
+}
+
+.blur {
+    filter: blur(5px);
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+
+/* Modal Content */
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    color: black !important;
+    border-radius: 25px;
+    height: 50%;
+}
+
+.modal-footer {
+    margin-top: 1%;
+}
+
+
+/* The Close Button */
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/**
+SCOREBOARD
+ */
+.table-overflow {
+    max-height: 200px;
+    overflow: auto;
+}
+
+#scoreboard {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#scoreboard td, #scoreboard th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#scoreboard tr:nth-child(even){background-color: #f2f2f2;}
+
+#scoreboard tr:hover {background-color: #ddd;}
+
+#scoreboard th {
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #0E4E1D;
+    color: white;
+}
+
+/**
+WIFI
+ */
+.wifi-status {
+    position: fixed; right: 2%; top: 2%;
+}
+
+.wifi-status img{
+    display: block;
+    max-width: 40px;
+}

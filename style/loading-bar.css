@@ -1,0 +1,18 @@
+/**
+Modal Loading and Cancel card
+ */
+#myProgress {
+    width: 100%;
+    background-color: grey;
+}
+
+#cancel-card{
+    display: flex;
+    padding: 0.5em;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: green;
+}
